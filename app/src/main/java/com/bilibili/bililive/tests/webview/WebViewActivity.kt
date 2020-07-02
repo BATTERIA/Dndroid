@@ -92,4 +92,8 @@ class WebViewActivity : AppCompatActivity() {
             webView?.loadUrl("https://www.baidu.com")
         }
     }
+
+    companion object {
+        private const val TAG = "WebViewActivity"
+    }
 }
