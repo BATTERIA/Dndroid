@@ -16,7 +16,9 @@ class DiskCache(context: Context) : ImageCache {
     private val cacheDir: String = context.cacheDir.path
 
     override fun get(url: String): Bitmap? {
-        return BitmapFactory.decodeFile("${cacheDir}url")
+        val bitmap = BitmapFactory.decodeFile("${cacheDir}url")
+        bitmap?.let { Log.d(TAG, "got bitmap from disk cache") }
+        return bitmap
     }
 
     override fun put(url: String, bitmap: Bitmap) {
