@@ -4,4 +4,10 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="black">#000000</color>
+    <color name="pk_bg">#CC111111</color>
+    <color name="pk_bg2">#FF111111</color>
+    <color name="pk_battle_left_progress_start">#FF00ACBD</color>
+    <color name="pk_battle_left_progress_end">#FF62CAD9</color>
+    <color name="pk_battle_right_progress_start">#FFFFC200</color>
+    <color name="pk_battle_right_progress_end">#FFFE8F00</color>
     </resources>

@@ -12,4 +12,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <com.bilibili.bililive.tests.view.ProgressView
+        android:layout_width="259dp"
+        android:layout_height="30dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="132"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="123"
+            android:layout_centerInParent="true"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="123"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
 </LinearLayout>

@@ -3,6 +3,14 @@
   <component name="LeetcodeEditor">
     <option name="projectConfig">
       <map>
+        <entry key="/var/folders/2y/9nqb0w715gv7qvgg15l8tlrm0000gp/T/leetcode/editor/cn/[167]两数之和 II - 输入有序数组.kt">
+          <value>
+            <LeetcodeEditor>
+              <option name="path" value="/var/folders/2y/9nqb0w715gv7qvgg15l8tlrm0000gp/T/leetcode/editor/cn/[167]两数之和 II - 输入有序数组.kt" />
+              <option name="questionId" value="167" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
         <entry key="/var/folders/2y/9nqb0w715gv7qvgg15l8tlrm0000gp/T/leetcode/editor/cn/[28]实现 strStr().java">
           <value>
             <LeetcodeEditor>
@@ -16,6 +24,22 @@
             <LeetcodeEditor>
               <option name="path" value="/var/folders/2y/9nqb0w715gv7qvgg15l8tlrm0000gp/T/leetcode/editor/cn/[28]实现 strStr().kt" />
               <option name="questionId" value="28" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+        <entry key="/var/folders/2y/9nqb0w715gv7qvgg15l8tlrm0000gp/T/leetcode/editor/cn/[29]两数相除.kt">
+          <value>
+            <LeetcodeEditor>
+              <option name="path" value="/var/folders/2y/9nqb0w715gv7qvgg15l8tlrm0000gp/T/leetcode/editor/cn/[29]两数相除.kt" />
+              <option name="questionId" value="29" />
+            </LeetcodeEditor>
+          </value>
+        </entry>
+        <entry key="/var/folders/2y/9nqb0w715gv7qvgg15l8tlrm0000gp/T/leetcode/editor/cn/[64]最小路径和.kt">
+          <value>
+            <LeetcodeEditor>
+              <option name="path" value="/var/folders/2y/9nqb0w715gv7qvgg15l8tlrm0000gp/T/leetcode/editor/cn/[64]最小路径和.kt" />
+              <option name="questionId" value="64" />
             </LeetcodeEditor>
           </value>
         </entry>
