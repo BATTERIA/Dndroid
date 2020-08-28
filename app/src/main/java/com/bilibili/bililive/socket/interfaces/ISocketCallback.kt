@@ -11,12 +11,6 @@ interface ISocketCallback {
      */
     fun onConnectSuccess(timestamp: Long)
 
-    // 内部回调
-    fun onConnectTimeout()
-
-    // 内部回调
-    fun onCloseWithError(code: Int, message: String?)
-
     /**
      * 弹幕连接成功
      */
@@ -51,4 +45,10 @@ interface ISocketCallback {
      * @param messageLength 消息长度，单位 byte
      */
     fun onMessageDecompressed(messageLength: Int)
+
+    /**
+     * 收到其它广播消息OR命令
+     * @param commandResponse
+     */
+    fun onMessageReceived(rawData: String)
 }

@@ -7,7 +7,7 @@ import com.bilibili.bililive.socket.interfaces.IPacketDecode
 import com.bilibili.bililive.socket.utils.ZLibUtils
 import log.LiveLogger
 import log.logError
-import log.logInfo
+import log.logDebug
 import java.nio.ByteBuffer
 import kotlin.math.min
 
@@ -50,7 +50,7 @@ class PacketDecode : IPacketDecode, LiveLogger {
 
         // 出现粘包情况, body数据不足, 等待服务端数据
         if (buffer.remaining() < bodyLength) {
-            logInfo { "return cause packet is't enough, wait for server" }
+            logDebug { "return cause packet is't enough, wait for server" }
             buffer.position(buffer.limit())
             return null
         }
@@ -97,7 +97,7 @@ class PacketDecode : IPacketDecode, LiveLogger {
 
         if (headerLength != HEADER_LENGTH) {
             // 未找到数据头，保留最后15个字节，可能包含下一个的头信息
-            logInfo { "didn't find header" }
+            logDebug { "didn't find header" }
             buffer.position(buffer.limit() - 11)
             buffer.compact()
             return null
@@ -109,7 +109,7 @@ class PacketDecode : IPacketDecode, LiveLogger {
 
         if (packetLength - HEADER_LENGTH <= 0) {
             // body长度需要大于0, 否则向后继续扫描header
-            logInfo { "header error: body length <= 16" }
+            logDebug { "header error: body length <= 16" }
             buffer.compact()
             return findHeader()
         }

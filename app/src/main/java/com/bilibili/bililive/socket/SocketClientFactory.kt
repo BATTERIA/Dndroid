@@ -1,5 +1,6 @@
 package com.bilibili.bililive.socket
 
+import com.bilibili.bililive.socket.beans.SocketType
 import com.bilibili.bililive.socket.interfaces.IPacketReader
 import com.bilibili.bililive.socket.interfaces.IPacketWriter
 import com.bilibili.bililive.socket.interfaces.ISocketCallback
@@ -16,22 +17,23 @@ import com.bilibili.bililive.socket.io.PacketWriter
  */
 object SocketClientFactory {
     fun build(
+        socketType: SocketType,
         uid: Long,
         identityId: Long,
         token: String,
         group: String,
         callback: ISocketCallback
-    ): SocketClient {
-        return MessageSocketClient(
-            PacketReader(PacketDecode()),
-            PacketWriter(PacketEncode(uid, identityId, token, group)),
-            callback
-        )
-    }
+    ): SocketClient = MessageSocketClient(
+        socketType,
+        PacketReader(PacketDecode()),
+        PacketWriter(PacketEncode(uid, identityId, token, group)),
+        callback
+    )
 
     fun build(
+        socketType: SocketType,
         packetReader: IPacketReader,
         packetWriter: IPacketWriter,
         callback: ISocketCallback
-    ): SocketClient = MessageSocketClient(packetReader, packetWriter, callback)
+    ): SocketClient = MessageSocketClient(socketType, packetReader, packetWriter, callback)
 }

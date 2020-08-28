@@ -1,10 +1,14 @@
 package com.bilibili.bililive.socket
 
 import android.os.SystemClock
+import com.bilibili.base.connectivity.ConnectivityMonitor
 import com.bilibili.bililive.socket.beans.Config
+import com.bilibili.bililive.socket.beans.Operation
 import com.bilibili.bililive.socket.beans.Packet
 import com.bilibili.bililive.socket.interfaces.*
 import com.bilibili.bililive.socket.plugins.HeartbeatPlugin
+import com.bilibili.bililive.socket.plugins.ReconnectPlugin
+import com.bilibili.droid.thread.HandlerThreads
 import log.LiveLogger
 import log.logError
 import log.logInfo
@@ -20,41 +24,46 @@ import java.nio.channels.UnresolvedAddressException
 abstract class SocketClient(
     private val packetReader: IPacketReader,
     private val packetWriter: IPacketWriter,
-    private val callback: ISocketCallback
+    protected val callback: ISocketCallback
 ) : LiveLogger {
-    private val plugins = mutableListOf<Plugin>()
+    private val plugins = mutableMapOf<String, Plugin>()
     private val executor = SocketExecutor
     private var socketChannel: SocketChannel? = null
     private var selector: Selector? = null
     private var config: Config? = null
     private val runnable = SocketRunnable()
     private var isConnected = false
+    private val heartbeatPlugin: HeartbeatPlugin
 
     init {
-        // todo: network reconnect
-        plugins.add(HeartbeatPlugin { packet -> write(packet) })
+        plugins[ReconnectPlugin.ID] = ReconnectPlugin { doConnect() }
+        HeartbeatPlugin { packet -> write(packet) }.apply {
+            heartbeatPlugin = this
+            plugins[HeartbeatPlugin.ID] = this
+        }
     }
 
     fun connect(host: String, port: Int, connectTimeOut: Long?) {
         config = Config(host, port, connectTimeOut)
-        logInfo { "socket connect config: ${config?.dump()}" }
-        config?.run { executor.execute(runnable, this) }
+        doConnect()
     }
 
     fun close() {
-        closeResource()
+        isConnected = false
+        runnable.closeSocket()
+        stopPlugins()
     }
 
     fun registerPlugin(plugin: Plugin) {
-        if (!plugins.contains(plugin)) {
-            plugins.add(plugin)
+        if (!plugins.containsValue(plugin)) {
+            plugins[plugin.id] = plugin
             plugin.onRegister()
         }
     }
 
     fun unRegisterPlugin(plugin: Plugin) {
-        if (plugins.contains(plugin)) {
-            plugins.remove(plugin)
+        if (plugins.containsValue(plugin)) {
+            plugins.remove(plugin.id)
             plugin.onUnregister()
         }
     }
@@ -65,6 +74,27 @@ abstract class SocketClient(
 
             packetWriter.write(packet)
         }
+    }
+
+    private fun doConnect() {
+        if (isConnected) return
+        logInfo { "socket connect config: ${config?.dump()}" }
+        config?.run { executor.execute(runnable, this) }
+        startPlugins()
+    }
+
+    private fun startPlugins() {
+        plugins.forEach { it.value.onStart() }
+    }
+
+    private fun stopPlugins() {
+        plugins.forEach { it.value.onStop() }
+    }
+
+    private fun connectSuccess() {
+        write(Packet.getPacket(Operation.OP_AUTH.value))
+        heartbeatPlugin.startHeartbeat()
+        callback.onConnectSuccess(SystemClock.elapsedRealtime())
     }
 
     private fun closeResource() {
@@ -81,7 +111,15 @@ abstract class SocketClient(
 
     private fun onSocketCloseWithError(errorCode: Int, errorMessage: String? = "") {
         closeResource()
-        callback.onCloseWithError(errorCode, errorMessage)
+        HandlerThreads.getHandler(HandlerThreads.THREAD_UI).post {
+            close()
+            val isNetAvailable = ConnectivityMonitor.getInstance().isNetworkActive
+            logInfo { "onSocketCloseWithError  networkAvailable = $isNetAvailable, $errorMessage" }
+            callback.onOpenFail(
+                if (isNetAvailable) errorCode else ERROR_CODE_NETWORK_BROKEN,
+                errorMessage
+            )
+        }
     }
 
     private fun logPacketError(t: Throwable) {
@@ -102,7 +140,7 @@ abstract class SocketClient(
             if (finishConnect()) {
                 this@SocketClient.isConnected = true
                 logInfo { "connectSocket: finishConnect" }
-                callback.onConnectSuccess(SystemClock.elapsedRealtime())
+                connectSuccess()
                 register(selector, SelectionKey.OP_READ)
             }
         }
@@ -213,7 +251,7 @@ abstract class SocketClient(
                 if (connect(InetSocketAddress("10.23.176.214", 5200))) {
                     logInfo { "connectSocket: connected sync" }
                     this@SocketClient.isConnected = true
-                    callback.onConnectSuccess(SystemClock.elapsedRealtime())
+                    connectSuccess()
                 } else {
                     this@SocketClient.isConnected = false
                     register(selector, SelectionKey.OP_CONNECT)
@@ -236,7 +274,7 @@ abstract class SocketClient(
                 if (currentTimeNanos - lastConnectTimeoutCheckTimeNanos >= SOCKET_SELECT_INTERVAL_TIME) {
                     lastConnectTimeoutCheckTimeNanos = currentTimeNanos
                     if (currentTimeNanos >= connectTimeOut) {
-                        callback.onConnectTimeout()
+                        callback.onOpenFail(ERROR_CODE_CONNECT_TIMEOUT, "timeout")
                         closeSocket()
                     }
                 }

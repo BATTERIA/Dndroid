@@ -3,6 +3,7 @@ package com.bilibili.bililive.socket.plugins
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
+import com.bilibili.bililive.socket.beans.Operation
 import com.bilibili.bililive.socket.beans.Packet
 import com.bilibili.bililive.socket.interfaces.Plugin
 
@@ -14,7 +15,7 @@ class HeartbeatPlugin(dealWrite: (packet: Packet) -> Unit) : Plugin {
         handler = Handler(handlerThread.looper, Handler.Callback { msg ->
             when (msg?.what) {
                 HEART_BEAT -> {
-                    dealWrite(Packet.getPacket(OPERATION_ECHO))
+                    dealWrite(Packet.getPacket(Operation.OP_HEARTBEAT.value))
                     handler?.sendMessageDelayed(
                         handler?.obtainMessage(HEART_BEAT),
                         HEART_BEAT_INTERVAL
@@ -26,20 +27,12 @@ class HeartbeatPlugin(dealWrite: (packet: Packet) -> Unit) : Plugin {
         })
     }
 
-    override val id: String
-        get() = ID
-
-    override fun onRegister() {
-        TODO("Not yet implemented")
-    }
-
-    override fun onUnregister() {
-        TODO("Not yet implemented")
+    fun startHeartbeat() {
+        handler?.sendMessageDelayed(handler?.obtainMessage(HEART_BEAT), HEART_BEAT_INTERVAL)
     }
 
     override fun onStart() {
         handlerThread.start()
-
     }
 
     override fun onStop() {
@@ -51,19 +44,16 @@ class HeartbeatPlugin(dealWrite: (packet: Packet) -> Unit) : Plugin {
         }
     }
 
+    override val id: String
+        get() = ID
+
+    override fun onRegister() = Unit
+
+    override fun onUnregister() = Unit
+
     companion object {
         const val ID = "socket.heartbeat"
         private const val TAG = "HeartbeatPlugin"
-
-        /**
-         * socket连接成功后鉴权消息类型
-         */
-        private const val OPERATION_AUTH = 7
-
-        /**
-         * socket连接成功后更新在线人数消息类型
-         */
-        private const val OPERATION_ECHO = 2
 
         /**
          * 心跳包消息
