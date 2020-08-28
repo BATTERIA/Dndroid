@@ -1,0 +1,76 @@
+@startuml
+class LiveSocketReader {
+    直播Socket数据包解析
+    ..
+    -readBuffer: ByteBuffer
+    -listener: ISocketReadCallback
+    +read(channel: SocketChannel)
+}
+
+class LiveSocketManager {
+    直播Socket管理类
+    ..
+    // key为广播类型
+    -commandHandlerMap: Map<String, LiveBaseCommandHandler>
+    -defaultHandletList: List<LiveBaseCommandHandler>
+    -socketListener: ISocketListener
+    -readCallback: ISocketReadCallback
+    -config: LiveSocketConfig
+
+    +addCommandHandler(handler: LiveBaseCommandHandler)
+    +connect(String host, int port, long roomId, long mid, String token)
+    +close()
+}
+
+abstract class LiveBaseCommandHandler {
+    直播广播处理类
+    ..
+    +handle(cmd: String, rawJson: JSONObject)
+}
+
+interface ISocketReadCallback {
+    直播Socket数据包解析回调
+    ..
+    +onAuthSuccess()
+    +onAuthFail(int code)
+    +onOpenFail(int errorCode, String message)
+    +onUpdateOnlineNumber(int number)
+    +onCommandReceived(CommandResponse response)
+    +onReceiveInvalidMsg()
+    +onMessageDecompressed(messageLength: Int)
+}
+
+interface ISocketListener {
+    Socket生命周期回调
+    ..
+    +onConnect()
+    +onClose()
+    +onPause()
+    +onResume()
+    +onError(code: Int, message: String)
+}
+
+abstract class BaseSocketReader {
+    Socket数据包解析
+    ..
+    +read(channel: SocketChannel)
+}
+
+interface ISocketClient {
+    Socket接口
+    ..
+    +connect()
+    +close()
+    +resume()
+    +pause()
+    +write(data: ISocketSendable)
+}
+
+LiveSocketReader -r-> ISocketReadCallback
+LiveSocketReader --> BaseSocketReader
+LiveSocketManager ..> LiveSocketReader
+LiveSocketManager --> ISocketReadCallback
+LiveSocketManager o-left-> LiveBaseCommandHandler
+LiveSocketManager --> ISocketClient
+LiveSocketManager -r-> ISocketListener
+@enduml

@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.ImageView
 import com.bilibili.bililive.tests.R
 import com.bilibili.bililive.tests.imageloader.cache.DoubleCache
+import com.bilibili.bililive.tests.test.TestSingleton
+import java.io.File
 
 /**
  * @author: yaobeihaoyu
@@ -26,7 +28,10 @@ class ImageLoaderActivity : AppCompatActivity() {
         imageLoader.displayImage(imageView1, "http://i0.hdslb.com/bfs/live/user_cover/2a246a601047fbbe524af3849ce48cb7a170065d.jpg@420w_236h_1e_1c_85q.webp")
 
         imageView1.setOnClickListener {
-            startAnimation(imageView1)
+//            startAnimation(imageView1)
+            val file = getLiveModManagerCacheDir()
+            val list = file?.listFiles()
+            println()
         }
     }
 
@@ -38,5 +43,23 @@ class ImageLoaderActivity : AppCompatActivity() {
         animSet.playTogether(scaleXAnim, scaleYAnim, alphaAnim)
         animSet.duration = 300
         animSet.start()
+    }
+
+    private fun hookObject() {
+        val clazz = Class.forName("com.bilibili.bililive.tests.test.TestSingleton")
+        val field = clazz.getField("INSTANCE")
+        val a = field.get(null)
+        val method = clazz.getDeclaredMethod("test")
+        method.invoke(a)
+    }
+
+    private fun getLiveModManagerCacheDir(): File? {
+        val appPath = applicationContext?.filesDir?.parentFile?.path
+        try {
+            return File("$appPath/app_mod_resource/cache/live")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
     }
 }

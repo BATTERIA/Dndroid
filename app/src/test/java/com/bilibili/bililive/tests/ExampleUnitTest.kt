@@ -1,9 +1,6 @@
 package com.bilibili.bililive.tests
 
 import org.junit.Test
-import kotlin.math.abs
-import kotlin.math.min
-
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -13,10 +10,10 @@ import kotlin.math.min
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        println(divisorGame(3))
+        println(maxProfit(intArrayOf(1,2,3,0,2)))
     }
 
-    fun divisorGame(N: Int): Boolean {
-        return N % 2 == 0
+    fun maxProfit(prices: IntArray): Int {
+
     }
 }

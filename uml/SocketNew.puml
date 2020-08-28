@@ -1,0 +1,113 @@
+@startuml
+
+class ThreadPoolFactory {
+    线程池单例工厂
+    ..
+    -instance: ThreadPoolExecutor
+    +getInstance(): ThreadPoolExecutor
+}
+
+interface ISocketClient {
+    Socket提供的能力
+    ..
+    +connect()
+    +close()
+    +resume()
+    +pause()
+    +write(data: ISocketSendable)
+}
+
+interface ISocketSendable {
+    可发送的广播
+    ..
+    +parse(): ByteArray
+}
+
+abstract class BaseSocketReader {
+    Socket数据包解析
+    ..
+    +read(channel: SocketChannel)
+}
+
+class SocketClient {
+    Socket核心类，组装所有Socket能力
+    ..
+    -config: SocketConfig
+    -decode: ISocketDecode?
+    -encode: ISocketEncode?
+    -listener: ISocketListener
+    -socketReader: BaseSocketReader
+    -heartbeatWriter: HeartbeatWriter
+    -threadPool: ThreadPoolExecutor
+    -socketChannel: SocketChannel
+    -selector: Selector
+    -isConnected: bool
+    +connect()
+    +close()
+    +resume()
+    +pause()
+    +write(data: ISocketSendable)
+    -runSocket()
+}
+
+class SocketClientBuilder {
+    Socket工厂类
+    ..
+    +config(config: SocketConfig)
+    +reader(reader: BaseSocketReader)
+    +listener(listener: ISocketListener)
+    +heartbeatInterval(interval: Long)
+    +heartbeatDataSource(dataSource: HeartbeatDataSource)
+    +build(): ISocketClient
+}
+
+class SocketConfig {
+    Socket连接配置类
+    ..
+    +host: String
+    +port: Int
+    +connectTimeOut: Long
+}
+
+class HeartbeatWriter {
+    心跳包发送类
+    ..
+    -interval: long
+    -dataSource: HeartbeatDataSource
+    +startPulse()
+}
+
+abstract class HeartbeatDataSource {
+    心跳包数据源
+    ..
+    +data: ISocketSendable
+}
+
+HeartbeatWriter --> HeartbeatDataSource
+
+interface ISocketListener {
+    Socket生命周期回调
+    ..
+    +onConnect()
+    +onClose()
+    +onPause()
+    +onResume()
+    +onError(code: Int, message: String)
+}
+
+SocketClientBuilder -right-> SocketClient
+
+SocketClient -right-> SocketConfig
+
+SocketClient ..> ISocketSendable
+
+SocketClient --> BaseSocketReader
+
+SocketClient --> ISocketListener
+
+SocketClient --> ThreadPoolFactory
+
+SocketClient .up.|> ISocketClient
+
+SocketClient --> HeartbeatWriter
+@enduml

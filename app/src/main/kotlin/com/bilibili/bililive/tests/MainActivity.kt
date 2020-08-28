@@ -22,5 +22,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, ImageLoaderActivity::class.java))
         }))
         recyclerView.adapter = adapter
+        Int.MIN_VALUE
     }
 }

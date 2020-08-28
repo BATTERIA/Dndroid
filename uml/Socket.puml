@@ -1,0 +1,139 @@
+@startuml
+class LiveDanmakuSocketContext {
+     mCommandHandlerMap: ConcurrentHashMap<String, BaseDanmakuMessageHandler>
+     commandHandler: DefaultMessageHandler
+     socketManager: SocketManager
+     config: LiveSocketConfig
+     liveSocketDecode: ISocketDecode
+     mRawSocketListener: LiveRawSocketListener
+}
+
+abstract class BaseDanmakuMessageHandler {
+    onMessageReceived(cmd: String, rawJson: JSONObject, switchs: List<Int>): Boolean
+}
+
+class DefaultMessageHandler {
+    onDefaultCommandListener: OnDefaultCommandListener
+    onMessageReceived(cmd: String, rawJson: JSONObject, switchs: List<Int>): Boolean
+    setOnDefaultCommandListener(listener: OnDefaultCommandListener)
+}
+
+interface OnDefaultCommandListener {
+    onDefaultCommandReceived(commandResponse: CommandResponse)
+}
+
+interface IDanmakuReceiveListener {
+    onAuthSuccess()
+    onAuthFail(code: Int)
+    onMessageReceived(json: String)
+    onCommandReceived(json: String)
+    onOnlineNumberUpdate(number: Int)
+    onReceiveInvalidMsg()
+    onMessageDecompressed(messageLength: Int)
+}
+
+interface LiveRawSocketListener {
+    onReceiveSocket(cmd: String, payLoad: JSONObject)
+}
+
+class SocketManager {
+    mSocketArray: SparseArray<LiveSocketRunnable>
+    mWaitNetSockets: SparseArray<LiveSocketConfig>
+    mSocketThreadPool: ThreadPoolExecutor
+
+    connect(config: LiveSocketConfig)
+    close(tag: Int)
+    resume(tag: Int)
+    pause(tag: Int)
+    closeAll()
+    resumeFromNetwork()
+    destroy()
+    onClear()
+}
+
+class LiveSocketRunnable {
+    config: LiveSocketConfig
+    mSocketChannel: SocketChannel
+    mSelector: Selector
+    mWriteBuffer: ByteBuffer
+    run()
+    closeSocket()
+    resumeSocket()
+    pauseSocket()
+    write(operation: Int)
+}
+
+class LiveSocketConfig {
+    host: String
+    port: Int
+    connectTimeOut: Long
+    decode: ISocketDecode
+    encode: ISocketEncode
+    listener: ISocketCallBack
+}
+
+interface ISocketDecode {
+    decode(channel: SocketChannel)
+    setListener(listener: ISocketDecodeCallBack)
+    setPauseStatus(onPause: Boolean)
+}
+
+interface ISocketEncode {
+    encode(operation: Int, buffer: ByteBuffer)
+}
+
+interface ISocketCallBack {
+    onStartConnect(tag: Int, timeStamp: Long)
+    onConnectSuccess(tag: Int, timeStamp: Long)
+    onConnectTimeout(tag: Int)
+    onSocketCloseWithError(tag: Int, errorCode: Int, errorMessage: String?)
+}
+
+class LiveSocketDecode {
+    mReadBuffer: ByteBuffer
+    mListener: ISocketDecodeCallBack
+    decode(channel: SocketChannel)
+    setListener(listener: ISocketDecodeCallBack)
+    setPauseStatus(onPause: Boolean)
+}
+
+class LiveSocketEncode {
+    encode(operation: Int, buffer: ByteBuffer)
+}
+
+interface ISocketDecodeCallBack {
+    onAuthSuccess()
+    onAuthFail(code: Int)
+    onMessageReceived(json: String)
+    onCommandReceived(json: String)
+    onOnlineNumberUpdate(number: Int)
+    onReceiveInvalidMsg()
+    onMessageDecompressed(messageLength: Int)
+}
+
+LiveSocketDecode --> ISocketDecodeCallBack
+
+LiveSocketRunnable -right-> LiveSocketConfig
+
+SocketManager *--> LiveSocketRunnable
+
+SocketManager *--> LiveSocketConfig
+
+LiveSocketConfig --> ISocketEncode
+
+LiveSocketConfig --> ISocketDecode
+
+LiveSocketConfig --> ISocketCallBack
+
+LiveSocketDecode .up.|> ISocketDecode
+
+LiveSocketEncode .up.|> ISocketEncode
+
+LiveDanmakuSocketContext -left-> SocketManager
+LiveDanmakuSocketContext --> BaseDanmakuMessageHandler
+LiveDanmakuSocketContext --> DefaultMessageHandler
+LiveDanmakuSocketContext --> IDanmakuReceiveListener
+DefaultMessageHandler -left-|> BaseDanmakuMessageHandler
+DefaultMessageHandler --> OnDefaultCommandListener
+LiveDanmakuSocketContext --> LiveRawSocketListener
+@enduml
