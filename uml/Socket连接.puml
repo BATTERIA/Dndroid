@@ -1,0 +1,20 @@
+@startuml
+start
+if (是否已连接) then (是)
+    if (校验host、port) then (成功)
+    : 开启线程;
+        fork
+            : 连接Socket;
+        fork again
+            : 开启超时校验;
+        fork again
+            : 轮询连接事件;
+        end fork
+    else (失败)
+    endif
+else (否)
+endif
+
+stop
+
+@enduml

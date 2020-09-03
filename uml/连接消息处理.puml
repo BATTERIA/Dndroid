@@ -1,0 +1,12 @@
+@startuml
+start
+:收到连接事件;
+if () then (成功)
+:监听读事件;
+:发送鉴权包;
+:开始发送心跳包;
+else (失败)
+endif
+stop
+
+@enduml

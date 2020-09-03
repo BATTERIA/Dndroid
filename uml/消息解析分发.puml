@@ -1,0 +1,20 @@
+@startuml
+start
+:数据解压;
+if (鉴权回复包) then (yes)
+    :解析json;
+    if (code==0) then (yes)
+        :鉴权成功回调;
+    else (no)
+        :鉴权失败回调;
+    endif
+else if (心跳回复包) then (yes)
+    :解析json;
+    :回调在线人数;
+else if (弹幕消息包) then (yes)
+    :解析json;
+    :根据cmd字段分发消息;
+
+endif
+stop
+@enduml

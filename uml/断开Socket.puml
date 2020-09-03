@@ -1,0 +1,8 @@
+@startuml
+start
+:关闭Socket;
+:关闭Socket子线程;
+:关闭SocketChannel;
+:关闭Selector;
+stop
+@enduml

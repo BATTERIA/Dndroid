@@ -1,0 +1,11 @@
+@startuml
+start
+:收到心跳消息;
+:开启新线程;
+if (判断是否心跳消息) then (是)
+:发送心跳包;
+:发送心跳30s延迟消息;
+else (否)
+endif
+stop
+@enduml
