@@ -1,2 +1,5 @@
+include ':mylibrary'
+include ':live-lint'
+include ':test_lint'
 rootProject.name='Tests'
 include ':app'

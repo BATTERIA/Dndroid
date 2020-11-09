@@ -3,12 +3,12 @@ package com.bilibili.bililive.tests.webview
 import android.graphics.Bitmap
 import android.net.http.SslError
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.webkit.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.bilibili.bililive.tests.R
 
 /**
@@ -32,7 +32,7 @@ class WebViewActivity : AppCompatActivity() {
 
         webView?.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                view?.loadUrl(url)
+                view?.loadUrl(url ?: "")
                 return true
             }
 

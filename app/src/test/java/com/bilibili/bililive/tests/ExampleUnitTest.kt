@@ -10,10 +10,28 @@ import org.junit.Test
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        println(maxProfit(intArrayOf(1,2,3,0,2)))
+        var a: A? = null
+        var b: B? = B()
+        println("1")
+        test(b ?: return)
+        println("2")
     }
 
-    fun maxProfit(prices: IntArray): Int {
+    fun test( b: B) {
+        println("enter test")
+    }
+}
 
+class C(val cc: String = "cc")
+
+class A(var c: C? = null) {
+    fun a() {
+        println(c?.cc)
+    }
+}
+
+class B(val c: C? = null) {
+    fun a() {
+        println(c?.cc)
     }
 }

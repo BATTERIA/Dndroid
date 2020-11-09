@@ -1,0 +1,21 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.tools.lint:lint-api:26.4.2'
+    implementation 'com.android.tools.lint:lint-gradle:26.4.2'
+    implementation 'com.android.tools.lint:lint:26.4.2'
+    implementation 'com.android.tools.lint:lint-tests:26.4.2'
+}
+
+jar {
+    manifest {
+//        attributes 'Lint-Registry': 'com.bilibili.bililive.test_lint.Register'
+        attributes("Lint-Registry": "com.rocketzly.checks.CustomIssueRegistry")
+    }
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"

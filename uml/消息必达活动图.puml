@@ -1,0 +1,17 @@
+@startuml
+start
+:解析SequenceID;
+if (判断SequenceID) then (>0)
+    :请求ACK接口;
+    if (判断是否在HandledIDs中) then (是)
+
+    else (否)
+        :分发给上层处理;
+        :加入到HandledIDs中;
+    endif
+else (==0)
+    :分发给上层处理;
+
+endif
+stop
+@enduml

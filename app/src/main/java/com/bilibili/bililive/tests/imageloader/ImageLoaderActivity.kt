@@ -3,11 +3,10 @@ package com.bilibili.bililive.tests.imageloader
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.bilibili.bililive.tests.R
 import com.bilibili.bililive.tests.imageloader.cache.DoubleCache
-import com.bilibili.bililive.tests.test.TestSingleton
 import java.io.File
 
 /**
