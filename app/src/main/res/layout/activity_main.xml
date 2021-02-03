@@ -12,26 +12,4 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <com.bilibili.bililive.tests.view.ProgressView
-        android:layout_width="259dp"
-        android:layout_height="30dp"/>
-
-    <LinearLayout
-        android:layout_width="100dp"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:background="@color/black"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:text="132"/>
-    </LinearLayout>
-    <com.guet.flexbox.litho.HostingView
-        android:id="@+id/test_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 </LinearLayout>

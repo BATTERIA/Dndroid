@@ -6,7 +6,7 @@ apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "27.0.3"
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "com.bilibili.bililive.tests"
@@ -38,7 +38,7 @@ android {
                 'DependencyApiCheck',
                 'ResourceNameCheck'
         ] as String[]
-        check checkList
+        abortOnError false
     }
 }
 
@@ -59,6 +59,8 @@ dependencies {
 //    annotationProcessor 'com.google.dagger:dagger-compiler:2.29.1'
 
     implementation 'com.github.sanyuankexie.Flexml:litho:0.3.2'
-    compile 'com.alibaba:fastjson:1.1.72.android'
+    implementation 'com.alibaba:fastjson:1.1.72.android'
     implementation 'com.google.code.gson:gson:2.8.6'
+
+//    implementation project(':mylibrary')
 }
