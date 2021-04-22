@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Tests</string>
     <string name="test">{\"type\":\"Flex\",\"children\":[{\"type\":\"Text\",\"attrs\":{\"textColor\":\"blue\",\"width\":\"100\",\"height\":\"100\",\"horizontalGravity\":\"center\",\"verticalGravity\":\"center\",\"text\":\"${clicked?helloworld:123}\",\"onClick\":\"${()->{pageContext.begin().with(()->{clicked=!clicked}).commit()}}\"}}]}</string>
+    <string name="progress_name">%1$d\&#037;</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

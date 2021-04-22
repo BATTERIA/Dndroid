@@ -9,6 +9,7 @@
 
     <ImageView
         android:id="@+id/image1"
+        android:tint="@color/pk_battle_left_progress_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/image" />
