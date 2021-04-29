@@ -34,6 +34,11 @@ class PagerAdapter : RecyclerView.Adapter<PagerAdapter.ViewHolder>() {
         Log.d(TAG, "onBindViewHolder ${holder.hashCode()}")
     }
 
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        Log.d(TAG, "onViewDetachedFromWindow ${holder.hashCode()}")
+    }
+
     companion object {
         private const val TAG = "DAdapter"
     }

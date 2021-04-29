@@ -31,6 +31,12 @@ class DRecyclerView : RecyclerView {
         timer.end("onDraw")
     }
 
+    override fun onDetachedFromWindow() {
+        val timer = DTimer("$TAG-$signal").apply { start() }
+        super.onDetachedFromWindow()
+        timer.end("onDetachedFromWindow")
+    }
+
     companion object {
         private const val TAG = "DRecyclerView"
     }

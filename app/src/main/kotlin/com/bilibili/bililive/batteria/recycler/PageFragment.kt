@@ -11,7 +11,7 @@ import com.bilibili.bililive.batteria.R
 
 
 class PageFragment : Fragment() {
-    var recyclerView: DRecyclerView? = null
+    private var recyclerView: DRecyclerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

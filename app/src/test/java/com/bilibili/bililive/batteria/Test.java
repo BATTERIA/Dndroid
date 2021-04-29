@@ -1,5 +1,9 @@
 package com.bilibili.bililive.batteria;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * author: gujingjing
  * created on: 2021/3/19 7:27 PM
@@ -7,9 +11,46 @@ package com.bilibili.bililive.batteria;
  */
 class Test {
     void test() {
-        //[3,1,4,null,null,2]
+        ArrayList<Integer> list = new ArrayList(Arrays.asList(5,1,3,5,3,6,8,1));
+
+        mergeSort(list);
+
         TreeNode treeNode = new TreeNode(3, new TreeNode(1), new TreeNode(4, new TreeNode(2), null));
         recoverTree(treeNode);
+    }
+
+    ArrayList<Integer> mergeSort(ArrayList<Integer> list) {
+        return recursion(list, 0, list.size() - 1);
+    }
+
+    ArrayList<Integer> recursion(ArrayList<Integer> list, int left, int right) {
+        if (left == right) {
+            return new ArrayList(Arrays.asList(list.get(left)));
+        }
+        int mid = left + (right - left >> 1);
+        ArrayList<Integer> l = recursion(list, left, mid);
+        ArrayList<Integer> r = recursion(list, mid + 1, right);
+        ArrayList<Integer> merge = new ArrayList<>();
+        int i = 0, j = 0;
+        while (i < l.size() || j < r.size()) {
+            if (i == l.size()) {
+                while (j < r.size()) merge.add(r.get(j++));
+                break;
+            }
+            if (j == r.size()) {
+                while (i < l.size()) merge.add(l.get(i++));
+                break;
+            }
+            if (l.get(i) < r.get(j))
+                merge.add(l.get(i++));
+            else
+                merge.add(r.get(j++));
+        }
+        return merge;
+    }
+
+    private static void test3() {
+
     }
 
     static TreeNode first, second, pre = new TreeNode(Integer.MIN_VALUE);

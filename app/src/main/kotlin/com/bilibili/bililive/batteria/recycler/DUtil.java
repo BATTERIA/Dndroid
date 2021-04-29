@@ -4,6 +4,6 @@ import java.util.List;
 
 public class DUtil {
     public static void test(List<Integer> list) {
-        RecyclerView.quickSort(list);
+//        RecyclerView.mergeSort(list);
     }
 }

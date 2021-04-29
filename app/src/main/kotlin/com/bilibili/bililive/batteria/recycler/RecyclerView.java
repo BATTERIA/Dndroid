@@ -7,6 +7,7 @@ package com.bilibili.bililive.batteria.recycler;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,19 +26,6 @@ public class RecyclerView extends androidx.recyclerview.widget.RecyclerView {
 
     public RecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-    }
-
-    static void mergeSort(List<Integer> list) {
-        recursion(list, 0, list.size() - 1);
-    }
-
-    static void recursion(List<Integer> list, int left, int right) {
-        if (left == right) {
-
-        }
-        int mid = left + (right - left) >> 1;
-//        recursion(list, left, cnt - 1);
-//        recursion(list, cnt + 1, right);
     }
 
     /**

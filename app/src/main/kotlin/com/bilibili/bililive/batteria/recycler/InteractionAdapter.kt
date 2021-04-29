@@ -56,6 +56,11 @@ class InteractionAdapter : RecyclerView.Adapter<InteractionAdapter.ViewHolder>()
         holder.text.text = list[position].title
     }
 
+    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+        super.onViewDetachedFromWindow(holder)
+        Log.d(TAG, "onViewDetachedFromWindow ${holder.hashCode()}")
+    }
+
     companion object {
         private const val TAG = "DAdapter"
     }

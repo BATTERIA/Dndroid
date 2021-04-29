@@ -32,7 +32,16 @@ class InteractionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         // interaction
         recyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView?.layoutManager = LinearLayoutManager(context)
+        recyclerView?.layoutManager = object : LinearLayoutManager(context) {
+            override fun smoothScrollToPosition(recyclerView: RecyclerView, state: RecyclerView.State, position: Int) {
+                val linearSmoothScroller = NewDanmuSmoothScroller(context)
+                linearSmoothScroller.let {
+                    it.setSpeedInterval(1000f)
+                    it.targetPosition = position
+                    startSmoothScroll(it)
+                }
+            }
+        }
         recyclerView?.recycledViewPool
         adapter = InteractionAdapter()
         recyclerView?.adapter = adapter
@@ -44,7 +53,7 @@ class InteractionFragment : Fragment() {
         val adapter2 = ItemAdapter()
         adapter2.setItems(listOf(Item("addLast", R.drawable.ic_more_cache) {
             adapter?.addData(InteractionData("add last"))
-            recyclerView?.smoothScrollToPosition(adapter!!.itemCount - 1)
+//            recyclerView?.smoothScrollToPosition(adapter!!.itemCount - 1)
         }, Item("notifyAll", R.drawable.ic_more_cache) {
             adapter?.notifyDataSetChanged()
         }, Item("refresh", R.drawable.ic_more_cache) {
@@ -61,6 +70,18 @@ class InteractionFragment : Fragment() {
         }, Item("stopAdd", R.drawable.ic_more_cache) {
             interrupt()
             isRunning = false
+        }, Item("moveToLast", R.drawable.ic_more_cache) {
+            recyclerView?.smoothScrollToPosition(adapter!!.itemCount - 1)
+        }, Item("addAndAnim10", R.drawable.ic_more_cache) {
+            val size = adapter!!.itemCount
+            for (i in 1..10) adapter?.addData(InteractionData("keep adding ${t++}"))
+            adapter?.notifyItemRangeInserted(size, 10)
+            recyclerView?.smoothScrollToPosition(adapter!!.itemCount - 1)
+        }, Item("addAndAnim110", R.drawable.ic_more_cache) {
+            val size = adapter!!.itemCount
+            for (i in 1..110) adapter?.addData(InteractionData("keep adding ${t++}"))
+            adapter?.notifyItemRangeInserted(size, 110)
+            recyclerView?.smoothScrollToPosition(adapter!!.itemCount - 1)
         }))
         recyclerViewButtons.adapter = adapter2
     }
@@ -73,9 +94,11 @@ class InteractionFragment : Fragment() {
         override fun run() {
             try {
                 while(true) {
-                    sleep(50)
+                    sleep(400)
                     context?.runOnUiThread {
-                        adapter?.addData(InteractionData("keep adding ${t++}"))
+                        val size = adapter!!.itemCount
+                        for (i in 1..11) adapter?.addData(InteractionData("keep adding ${t++}"))
+                        adapter?.notifyItemRangeInserted(size, 11)
                         recyclerView?.smoothScrollToPosition(adapter!!.itemCount - 1)
                     }
                 }
