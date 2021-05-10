@@ -8,9 +8,8 @@ import org.junit.Test
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
-    var a = 1
     @Test
     fun addition_isCorrect() {
-        a = 2
+        TestClass().run()
     }
 }

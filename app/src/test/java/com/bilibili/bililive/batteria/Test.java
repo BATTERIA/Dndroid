@@ -49,8 +49,14 @@ class Test {
         return merge;
     }
 
-    private static void test3() {
+    public void sort(List<Integer> sourceArray) {
 
+    }
+
+    private void order(List<Integer> sourceArray, int l, int r) {
+        for (int i = r; i >= l; ) {
+
+        }
     }
 
     static TreeNode first, second, pre = new TreeNode(Integer.MIN_VALUE);
