@@ -1,10 +1,13 @@
 package com.bilibili.bililive.batteria.recycler
 
+import android.app.Activity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.bilibili.bililive.batteria.R
 
@@ -17,12 +20,18 @@ class PagerAdapter : RecyclerView.Adapter<PagerAdapter.ViewHolder>() {
     }
 
     override fun getItemViewType(position: Int): Int {
-        return super.getItemViewType(position)
+        return position
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         Log.d(TAG, "onCreateViewHolder")
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.page_view_item_recycler, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.page_view_item_recycler, parent, false)
+        val transaction = (parent.context as FragmentActivity).supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.content, InteractionFragment())
+        transaction.commit()
+
         return ViewHolder(view).apply { vhs.add(this) }
     }
 
@@ -47,4 +56,4 @@ class PagerAdapter : RecyclerView.Adapter<PagerAdapter.ViewHolder>() {
     }
 }
 
-data class PagerData(val title: String)
+data class PagerData(val title: String, val special: Boolean = false)

@@ -94,7 +94,7 @@ public class NewDanmuSmoothScroller extends RecyclerView.SmoothScroller {
         final int time = (int)mSpeedInterval;
 //        final int time = calculateTimeForDeceleration(distance);
         if (time > 0) {
-            action.update(-dx, -dy, time, mDecelerateInterpolator);
+            action.update(-dx, -dy, time, mLinearInterpolator);
         }
     }
 
@@ -156,7 +156,7 @@ public class NewDanmuSmoothScroller extends RecyclerView.SmoothScroller {
         return mMillisPerPixel;
     }
 
-    protected void setSpeedInterval(float interval) {
+    public void setSpeedInterval(float interval) {
         if (interval == 0f) interval = 1;
         mSpeedInterval = interval;
     }

@@ -1,6 +1,6 @@
 package com.bilibili.bililive.batteria
 
-import org.junit.Test
+import java.util.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -8,8 +8,12 @@ import org.junit.Test
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
-    @Test
+    @org.junit.Test
     fun addition_isCorrect() {
-        TestClass().run()
+//        val a = intArrayOf(1,3,4,4,6)
+//
+//        println(Arrays.binarySearch(a, 5))
+//        println(Test().test1())
+        Test().test()
     }
 }

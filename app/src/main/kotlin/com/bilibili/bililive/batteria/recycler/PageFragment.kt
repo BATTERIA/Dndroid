@@ -31,7 +31,7 @@ class PageFragment : Fragment() {
         recyclerView?.recycledViewPool
         val adapter = PagerAdapter()
         adapter.addData(PagerData(""))
-        adapter.addData(PagerData(""))
+        adapter.addData(PagerData("", true))
         adapter.addData(PagerData(""))
         recyclerView?.adapter = adapter
         PagerSnapHelper().attachToRecyclerView(recyclerView)

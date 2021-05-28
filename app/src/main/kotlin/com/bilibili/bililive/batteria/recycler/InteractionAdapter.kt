@@ -13,12 +13,22 @@ class InteractionAdapter : RecyclerView.Adapter<InteractionAdapter.ViewHolder>()
     private val vhs = mutableListOf<ViewHolder>()
 
     init {
-        addBaseData()
+//        addBaseData()
+    }
+
+    fun addFirst(d: InteractionData) {
+        list.add(0, d)
+        notifyItemInserted(0)
     }
 
     fun addData(d: InteractionData) {
         list.add(d)
         notifyItemInserted(list.size - 1)
+    }
+
+    fun add20Data() {
+        for (i in 0..5) list.add(0, InteractionData("欢迎乔巴不小心～ $i"))
+        notifyItemRangeInserted(0, 6)
     }
 
     fun refresh() {
@@ -34,7 +44,6 @@ class InteractionAdapter : RecyclerView.Adapter<InteractionAdapter.ViewHolder>()
 
     private fun addBaseData() {
         for (i in 0..20) list.add(InteractionData("欢迎乔巴不小心～ $i"))
-
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -54,6 +63,13 @@ class InteractionAdapter : RecyclerView.Adapter<InteractionAdapter.ViewHolder>()
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d(TAG, "onBindViewHolder ${holder.hashCode()}")
         holder.text.text = list[position].title
+        if (list[position].height != -1) {
+            holder.itemView.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+            holder.itemView.visibility = View.INVISIBLE
+        } else {
+            holder.itemView.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            holder.itemView.visibility = View.VISIBLE
+        }
     }
 
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
@@ -70,4 +86,4 @@ class InteractionAdapter : RecyclerView.Adapter<InteractionAdapter.ViewHolder>()
     }
 }
 
-data class InteractionData(val title: String)
+data class InteractionData(val title: String, val height: Int = -1)

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" android:compileSdkVersion="30" android:compileSdkVersionCodename="11" package="com.bilibili.bililive.tests" platformBuildVersionCode="30" platformBuildVersionName="11">
+    <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="30"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <application android:theme="@style/AppTheme" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:name="com.bilibili.bililive.batteria.MainApplication" android:allowBackup="true" android:supportsRtl="true" android:roundIcon="@mipmap/ic_launcher_round" android:appComponentFactory="androidx.core.app.CoreComponentFactory">
+        <activity android:name="com.bilibili.bililive.batteria.FrescoActivity"/>
+        <activity android:name="com.bilibili.bililive.batteria.recycler.RecyclerActivity"/>
+        <activity android:name="com.bilibili.bililive.batteria.hummer.HummerTestActivity"/>
+        <activity android:name="com.bilibili.bililive.infra.util.cache.api.CacheActivity"/>
+        <activity android:name="com.bilibili.bililive.batteria.ProgressViewActivity"/>
+        <activity android:name="com.bilibili.bililive.batteria.ProgressActivity"/>
+        <activity android:name="com.bilibili.bililive.batteria.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="com.bilibili.bililive.batteria.webview.WebViewActivity"/>
+        <activity android:name="com.bilibili.bililive.batteria.imageloader.ImageLoaderActivity"/>
+        <activity android:theme="@style/AppTheme.NoActionBar" android:name="com.didi.hummer.HummerActivity"/>
+        <activity android:theme="@style/ActivityTranslucent" android:name="com.blankj.utilcode.util.UtilsTransActivity" android:multiprocess="true" android:configChanges="keyboardHidden|orientation|screenSize" android:windowSoftInputMode="stateAlwaysHidden"/>
+        <provider android:name="com.blankj.utilcode.util.UtilsFileProvider" android:exported="false" android:authorities="com.bilibili.bililive.tests.utilcode.provider" android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/util_code_provider_paths"/>
+        </provider>
+        <service android:name="com.blankj.utilcode.util.MessengerUtils$ServerService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.bilibili.bililive.tests.messenger"/>
+            </intent-filter>
+        </service>
+    </application>
+</manifest>
