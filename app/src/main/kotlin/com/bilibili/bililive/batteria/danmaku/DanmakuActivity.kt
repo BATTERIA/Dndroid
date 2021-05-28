@@ -158,40 +158,33 @@ class DanmakuActivity : AppCompatActivity() {
         return (spValue * fontScale + 0.5f).toInt()
     }
 
+    private var mCurrentScrollView: RecyclerView? = null;
     private fun initFakeDanmaku() {
-        val ll = findViewById<LinearLayout>(R.id.ll)
+        val ll = findViewById<DanmuLinearLayout>(R.id.ll)
         for (i in 0 until fakeSize) {
             val rv = RecyclerView(this)
             rv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    if (auto) return
-
-                    if (RecyclerView.SCROLL_STATE_IDLE != recyclerView.scrollState) {
-                        for (j in 0 until fakeSize) {
-                            val rvt = recyclerViews[j]
-                            if (rvt == recyclerView) continue
-                            Log.e("testtest", "$j  ${recyclerView.scrollState}")
-                            rvt.scrollBy(dx, dy)
-                        }
-                    }
-
-//                    when (recyclerView.scrollState) {
-//                        RecyclerView.SCROLL_STATE_IDLE -> return
-//                        RecyclerView.SCROLL_STATE_DRAGGING -> {
-//                            if (auto) {
-//                                auto = false
-//                                interrupt()
-//                            }
+//                    if (auto) return
+//
+//                    if (RecyclerView.SCROLL_STATE_IDLE != recyclerView.scrollState) {
+//                        if (mCurrentScrollView == null) {
+//                            mCurrentScrollView = recyclerView;
+//                        }
+//                        for (j in 0 until fakeSize) {
+//                            val rvt = recyclerViews[j]
+//
+//                            if (/*rvt === recyclerView ||*/ mCurrentScrollView === rvt) continue
+//                            Log.e("testtest", "$j  ${recyclerView.scrollState}")
+//                            rvt.scrollBy(dx, dy)
+//                        }
+//                    } else {
+//                        if (mCurrentScrollView != null && mCurrentScrollView === recyclerView) {
+//                            mCurrentScrollView = null;
 //                        }
 //                    }
-//                    if (auto) return
-//                    for (j in 0 until fakeSize) {
-//                        val rvt = recyclerViews[j]
-//                        if (rvt == recyclerView) continue
-//                        Log.e("testtest", "$j  ${recyclerView.scrollState}")
-//                        rvt.scrollBy(dx, dy)
-//                    }
+//
                 }
             })
             val layoutManager = object : LinearLayoutManager(this) {
