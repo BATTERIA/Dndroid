@@ -1,4 +1,4 @@
-package com.bilibili.bililive.batteria.danmaku;
+package com.bilibili.bililive.batteria.danmaku.fake;
 
 import android.content.Context;
 import android.graphics.PointF;
@@ -128,6 +128,10 @@ public class UniformScroller extends RecyclerView.SmoothScroller {
         mTargetVector = null;
     }
 
+    /**
+     * 设置速度
+     * @param speed 每英寸所需的时间 单位：ms
+     */
     public void setSpeed(float speed) {
         speedPerInch = speed;
     }

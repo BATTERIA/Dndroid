@@ -46,8 +46,8 @@
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp" />
 
-    <com.bilibili.bililive.batteria.danmaku.DanmuLinearLayout
-        android:id="@+id/ll"
+    <com.bilibili.bililive.batteria.danmaku.fake.FakeDanmakuView
+        android:id="@+id/fake_danmaku_view"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -55,5 +55,5 @@
         app:layout_constraintTop_toBottomOf="@+id/recycler"
         tools:layout_editor_absoluteX="-16dp">
 
-    </com.bilibili.bililive.batteria.danmaku.DanmuLinearLayout>
+    </com.bilibili.bililive.batteria.danmaku.fake.FakeDanmakuView>
 </androidx.constraintlayout.widget.ConstraintLayout>

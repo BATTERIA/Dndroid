@@ -11,15 +11,6 @@ import com.bilibili.bililive.batteria.R
 class DanmakuAdapter : RecyclerView.Adapter<DanmakuAdapter.ViewHolder>() {
     private val list = mutableListOf<DanmakuData>()
 
-    init {
-//        addBaseData()
-    }
-
-    fun addFirst(d: DanmakuData) {
-        list.add(0, d)
-        notifyItemInserted(0)
-    }
-
     fun addData(d: DanmakuData) {
         list.add(d)
         notifyItemInserted(list.size - 1)
@@ -36,13 +27,6 @@ class DanmakuAdapter : RecyclerView.Adapter<DanmakuAdapter.ViewHolder>() {
         notifyDataSetChanged()
     }
 
-    private fun addBaseData() {
-        for (i in 0..20) list.add(DanmakuData("欢迎乔巴不小心～ $i"))
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return super.getItemViewType(position)
-    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         Log.d(TAG, "onCreateViewHolder")
         val view =

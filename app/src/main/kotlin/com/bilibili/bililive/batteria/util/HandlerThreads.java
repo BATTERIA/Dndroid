@@ -1,4 +1,4 @@
-package com.bilibili.bililive.batteria.danmaku;
+package com.bilibili.bililive.batteria.util;
 
 /*
  * Copyright (c) 2016. Bilibili Inc.

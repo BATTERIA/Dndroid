@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bilibili.bililive.batteria.*
 import androidx.recyclerview.widget.RecyclerView
-import com.bilibili.bililive.batteria.danmaku.UniformScroller
+import com.bilibili.bililive.batteria.danmaku.fake.UniformScroller
 import org.jetbrains.anko.runOnUiThread
 
 class InteractionFragment : Fragment() {
