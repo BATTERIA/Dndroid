@@ -39,8 +39,8 @@ class DanmakuActivity : AppCompatActivity() {
                 Worker1().apply { workers.add(this) }.start()
             }
         }
-        Worker1().apply { workers.add(this) }.start()
-        running = true
+//        Worker1().apply { workers.add(this) }.start()
+//        running = true
     }
 
     override fun onDestroy() {

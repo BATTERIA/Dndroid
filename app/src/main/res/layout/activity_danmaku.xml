@@ -36,23 +36,29 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.559" />
 
-    <com.bilibili.bililive.batteria.recycler.RecyclerView
-        android:id="@+id/recycler"
+    <HorizontalScrollView
+        android:id="@+id/hsv"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:orientation="horizontal"
+        android:overScrollMode="never"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/danmaku_view"
         app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="0dp" />
+        tools:layout_editor_absoluteX="0dp">
+
+        <com.bilibili.bililive.batteria.danmaku.TestView
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+    </HorizontalScrollView>
 
     <com.bilibili.bililive.batteria.danmaku.fake.FakeDanmakuView
         android:id="@+id/fake_danmaku_view"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recycler"
+        app:layout_constraintTop_toBottomOf="@+id/hsv"
         tools:layout_editor_absoluteX="-16dp">
 
     </com.bilibili.bililive.batteria.danmaku.fake.FakeDanmakuView>
