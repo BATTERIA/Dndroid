@@ -13,7 +13,9 @@ import com.blankj.utilcode.util.ConvertUtils.dp2px
  * @description:
  */
 class LiveMeteorSpan(
-    private val scale: Float = 1.0f,
+    private val isMain: Boolean,
+    private val sizeScale: Float,
+    private val alphaScale: Float,
     private val textColor: Int, // text color
     private val star: Drawable // background color
 ) : ReplacementSpan() {
@@ -23,13 +25,13 @@ class LiveMeteorSpan(
     private var textPaint = Paint()
     private val tagRect = RectF()
 
-    private val verticalPadding = dp2px(4f) * scale
-    private val paddingLeft = dp2px(18f) * scale
+    private val verticalPadding = dp2px(4f) * sizeScale
+    private val paddingLeft = dp2px(18f) * sizeScale
 
     private val tail = dp2px(64f)
     private val strokeWidth = dp2px(1.5f)
     private val radius = dp2px(100f)
-    private val textSize = dp2px(16f) * scale
+    private val textSize = dp2px(16f) * sizeScale
 
     override fun getSize(
         paint: Paint,
@@ -74,11 +76,13 @@ class LiveMeteorSpan(
         text?.run {
             drawText(canvas, this, x, start, end, topRect, bottomRect, textPaint)
         }
+        drawStar(canvas, x, topRect, bottomRect, paint)
     }
 
     private fun drawBackground(canvas: Canvas, x: Float, top: Float, bottom: Float, paint: Paint) {
         // 绘制背景色
         paint.color = Color.argb(0x66, 0x0F, 0x12, 0x2F)
+        updatePaintAlpha(paint)
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
         paint.shader = LinearGradient(
@@ -93,8 +97,10 @@ class LiveMeteorSpan(
         tagRect.set(x, top, x + width + tail + 100f, bottom)
         canvas.drawRoundRect(tagRect, radius.toFloat(), radius.toFloat(), paint)
 
+        if (!isMain) return
         // 主态绘制边框
         paint.color = Color.argb(0xFF, 0x82, 0xF2, 0xFF)
+        updatePaintAlpha(paint)
         paint.style = Paint.Style.STROKE
         paint.strokeWidth = strokeWidth.toFloat()
         paint.shader = LinearGradient(
@@ -107,10 +113,11 @@ class LiveMeteorSpan(
             Shader.TileMode.CLAMP
         )
         canvas.drawRoundRect(tagRect, radius.toFloat(), radius.toFloat(), paint)
-        drawStar(canvas, x, top, bottom, paint)
     }
 
     private fun drawStar(canvas: Canvas, x: Float, top: Float, bottom: Float, paint: Paint) {
+        paint.alpha = 0xFF
+        updatePaintAlpha(paint)
         val starPadding = dp2px(3f)
         val starBottom = bottom - starPadding
         val starTop = top + starPadding
@@ -133,6 +140,7 @@ class LiveMeteorSpan(
         paint.style = Paint.Style.FILL
         paint.typeface = Typeface.DEFAULT_BOLD
         paint.color = textColor
+        updatePaintAlpha(paint)
         paint.isAntiAlias = true
         paint.textAlign = Paint.Align.CENTER
         val textCenterX = x + width / 2 + paddingLeft
@@ -140,5 +148,9 @@ class LiveMeteorSpan(
             top + (bottom - top) / 2 - (textPaint.ascent() + textPaint.descent()) / 2
         val tag = text.subSequence(start, end).toString()
         canvas.drawText(tag, textCenterX, textBaselineY, paint)
+    }
+
+    private fun updatePaintAlpha(paint: Paint) {
+        paint.alpha = (paint.alpha * alphaScale).toInt()
     }
 }

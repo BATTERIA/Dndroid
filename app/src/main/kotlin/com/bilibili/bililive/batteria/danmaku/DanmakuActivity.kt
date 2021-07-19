@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.widget.Button
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.bilibili.bililive.batteria.R
 import com.bilibili.bililive.batteria.danmaku.fake.FakeDanmakuView
@@ -43,9 +42,6 @@ class DanmakuActivity : AppCompatActivity() {
                 .getDrawable(R.drawable.ic_new_danmaku_airborne_dfm)
         })
 
-    //发送弹幕的输入框和按钮
-    private var editText: EditText? = null
-    private var btl: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,122 +50,21 @@ class DanmakuActivity : AppCompatActivity() {
         fakeDanmakuView = findViewById(R.id.fake_danmaku_view)
         fakeDanmakuView?.init(8)
 
-        editText = findViewById(R.id.et)
-        btl = findViewById(R.id.bt)
-        //点击发送按钮监听
-        btl?.setOnClickListener {
-//            if (auto) {
-//                interrupt()
-//                fakeDanmakuView?.stopScrollAnimation()
-//                auto = false
-//            } else {
-//                auto = true
-//                Worker1().apply { workers.add(this) }.start()
-//            }
-            val danmaku =
-                danmakuContext?.mDanmakuFactory?.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL)!!
-            danmaku.textSize = sp2px(30f).toFloat()
-
-
-            val text = "哔哩哔哩干杯"
-            val content = SpannableString("$text")
-
-
-//            val params: MedalBackgroundSpanV2.LayoutParams = LayoutParams(
-//                context, textSize, dip2px(context, 1),
-//                dip2px(context, 0.5f), medal.length, guardDrawable != null
-//            )
-//            params.initColorInfo(
-//                medalColor,
-//                medalColorEnd,
-//                medalColorBorder,
-//                medalColorName,
-//                medalColorLevel
-//            )
-//            params.setPadding(verticalPadding, verticalPadding)
-//            params.mGuardDrawable = guardDrawable
-
-//            content.setSpan(MeteorSpan(Color.parseColor("#12DBD1"),Color.parseColor("#FFFFFF"), danmaku), 0, text.length, 0)
-
-            val padding = dp2px(5f)
-
-
-            val span = LiveMeteorSpan(1.1f, Color.parseColor("#FFFFFF"), resources.getDrawable(R.drawable.blue_star))
-            content.setSpan(span, 0, text.length, 0)
-
-            danmaku.text = content
-
-            danmaku.padding = 5
-            danmaku.textColor = Color.BLACK
-
-//            danmaku.time = dv!!.currentTime
-//            val duration = 10000L
-//            danmaku.duration = Duration(duration)
-//            danmaku.rotationZ = -45f
-//            danmakuContext?.mDanmakuFactory?.fillTranslationData(
-//                danmaku,
-//                0f,
-//                0f,
-//                1f,
-//                1f,
-//                duration,
-//                0,
-//                1f,
-//                1f
-//            )
-//            danmakuContext?.mDanmakuFactory?.fillAlphaData(
-//                danmaku,
-//                (255 * 0.9).toInt(),
-//                (255 * 0.9).toInt(),
-//                duration
-//            )
-            dv?.addDanmaku(danmaku)
-
-//            var data = ""
-//            for (i in b.indices) {
-//                data += b[i][0]
-//                data += ','
-//                data += b[i][1]
-//                if (i != b.size - 1) {
-//                    data += 'L'
-//                }
-//            }
-
-//            val motionPathString: String = data
-//            if (!TextUtils.isEmpty(motionPathString)) {
-//                val pointStrArray =
-//                    motionPathString.split("L".toRegex()).toTypedArray()
-//                if (pointStrArray.isNotEmpty()) {
-//                    val points =
-//                        Array(pointStrArray.size) { FloatArray(2) }
-//                    for (i in pointStrArray.indices) {
-//                        val pointArray =
-//                            pointStrArray[i].split(",".toRegex()).toTypedArray()
-//                        if (pointArray.size >= 2) {
-//                            points[i][0] = parseFloat(pointArray[0])
-//                            points[i][1] = parseFloat(pointArray[1])
-//                        }
-//                    }
-//                    DanmakuFactory.fillLinePathData(danmaku, points, 1.0f, 1.0f)
-//                }
-//            }
-
-
-//            for (i in 0..3) {
-//                val danmaku1 =
-//                    DanmakuFactory.create()
-//                        .createDanmaku(BaseDanmaku.TYPE_SCROLL_RL, danmakuContext)
-//                //设置弹幕内容和样式
-//                danmaku1.text = "content"
-//                danmaku1.padding = 5
-//                danmaku1.textSize = sp2px(20f).toFloat()
-//                danmaku1.textColor = Color.BLACK
-//                danmaku1.time = dv!!.currentTime
-//                dv?.addDanmaku(danmaku1)
-//            }
+        findViewById<Button>(R.id.bt1).setOnClickListener {
+            sendMeteor(0.8f, 0.5f)
         }
-//        Worker1().apply { workers.add(this) }.start()
-//        running = true
+
+        findViewById<Button>(R.id.bt2).setOnClickListener {
+            sendMeteor(0.9f, 0.7f)
+        }
+
+        findViewById<Button>(R.id.bt3).setOnClickListener {
+            sendMeteor(1f, 0.9f)
+        }
+
+        findViewById<Button>(R.id.bt4).setOnClickListener {
+            sendMeteor(1.1f, 1f)
+        }
 
         dv = findViewById(R.id.dv)
         val parser: BaseDanmakuParser = object : BaseDanmakuParser() {
@@ -192,6 +87,30 @@ class DanmakuActivity : AppCompatActivity() {
 
         danmakuContext?.setCacheStuffer(SpannedCacheStuffer(), mCacheStufferAdapter);
         dv?.prepare(parser, danmakuContext)
+    }
+
+    private fun sendMeteor(scale: Float, alphaScale: Float) {
+        val danmaku = danmakuContext?.mDanmakuFactory?.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL)!!
+        danmaku.textSize = sp2px(25f).toFloat()
+
+        val text = "哔哩哔哩干杯"
+        val content = SpannableString("$text")
+
+        val span = LiveMeteorSpan(
+            false,
+            scale,
+            alphaScale,
+            Color.parseColor("#FFFFFF"),
+            resources.getDrawable(R.drawable.blue_star)
+        )
+        content.setSpan(span, 0, text.length, 0)
+
+        danmaku.text = content
+
+        danmaku.padding = 5
+        danmaku.textColor = Color.BLACK
+
+        dv?.addDanmaku(danmaku)
     }
 
     private val mCacheStufferAdapter: BaseCacheStuffer.Proxy = object : BaseCacheStuffer.Proxy() {
