@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#2D3F58"
     tools:context=".DanmakuActivity">
 
 
@@ -36,21 +37,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.559" />
 
-    <HorizontalScrollView
+    <LinearLayout
         android:id="@+id/hsv"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:overScrollMode="never"
-        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/danmaku_view"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp">
 
-        <com.bilibili.bililive.batteria.danmaku.TestView
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
-    </HorizontalScrollView>
+        <master.flame.danmaku.ui.widget.DanmakuView
+            android:id="@+id/dv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
     <com.bilibili.bililive.batteria.danmaku.fake.FakeDanmakuView
         android:id="@+id/fake_danmaku_view"

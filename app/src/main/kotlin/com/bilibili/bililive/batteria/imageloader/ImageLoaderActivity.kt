@@ -2,15 +2,19 @@ package com.bilibili.bililive.batteria.imageloader
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.graphics.RectF
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.ImageSpan
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bilibili.bililive.batteria.R
 import com.bilibili.bililive.batteria.danmaku.Danmaku
 import com.bilibili.bililive.batteria.danmaku.TestView
-import com.bilibili.bililive.batteria.imageloader.cache.DoubleCache
 import com.bilibili.bililive.batteria.util.HandlerThreads
+import kotlinx.coroutines.*
 import java.io.File
 
 /**
@@ -19,7 +23,7 @@ import java.io.File
  * @since: 2020/7/2 3:48 PM
  * @description:
  */
-class ImageLoaderActivity : AppCompatActivity() {
+class ImageLoaderActivity : AppCompatActivity(), CoroutineScope by MainScope() {
     var test: TestView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +58,29 @@ class ImageLoaderActivity : AppCompatActivity() {
             test?.invalidate()
         }
 
-        HandlerThreads.postDelayed(HandlerThreads.THREAD_UI, ::runnable, 100)
+        launch(Dispatchers.Main) {
+            while (true) {
+                delay(100)
+                test?.add(Danmaku("测试", 0f, 1, 1))
+            }
+        }
+
+//        HandlerThreads.postDelayed(HandlerThreads.THREAD_UI, ::runnable, 100)
+
+        test?.stopScroll()
+
+        // test
+//        val spanString = SpannableString("test")
+//        val d = resources.getDrawable(R.drawable.web)
+//        d.setBounds(0, 0, d.intrinsicWidth, d.intrinsicHeight)
+//        val imageSpan = ImageSpan(d, ImageSpan.ALIGN_BASELINE)
+//        spanString.setSpan(imageSpan, 1, 3, 0)
+//        findViewById<TextView>(R.id.tv).text = spanString
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cancel()
     }
 
     private var isRunning = true

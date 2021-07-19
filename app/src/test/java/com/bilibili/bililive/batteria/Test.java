@@ -8,6 +8,10 @@ import java.util.Arrays;
  * description:
  */
 public class Test {
+    public static void main(String[] args) {
+        System.out.println("hello");
+    }
+
     int test1() {
         int[] a = {1, 3, 4, 4, 6};
         int t = Arrays.binarySearch(a, 0, 4, 6);

@@ -3,26 +3,28 @@ package com.bilibili.bililive.batteria
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Path
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.Keep
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleObserver
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bilibili.bililive.batteria.danmaku.DanmakuActivity
 import com.bilibili.bililive.batteria.imageloader.ImageLoaderActivity
 import com.bilibili.bililive.batteria.recycler.RecyclerActivity
 import com.bilibili.bililive.batteria.webview.WebViewActivity
 import com.bilibili.bililive.infra.util.cache.api.CacheActivity
-import com.bilibili.bililive.batteria.danmaku.DanmakuActivity
-import kotlin.reflect.full.*
+import java.util.*
 
 @Keep
 class MainActivity : AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 //        LithoBuildTool.init(this)
 
         lifecycle.addObserver(object : LifecycleObserver {
@@ -73,17 +75,44 @@ class MainActivity : AppCompatActivity() {
 //            if (property is KMutableProperty0<*>) Log.e("p2p-test", "success0")
 //            Log.e("p2p-test", "${property!!::class.qualifiedName}")
 
-            Log.e("p2p-test", "members size ${Testp2p::class.members.size}")
-            Log.e("p2p-test", "members ${Testp2p::class.members}")
-            Log.e("p2p-test", "companion members size ${Testp2p::class.companionObject?.members?.size}")
-            Log.e("p2p-test", "companion members ${Testp2p::class.companionObject?.members}")
-            Log.e("p2p-test", "companion members size ${Testp2p.Companion::class.members.size}")
-            Log.e("p2p-test", "companion members ${Testp2p.Companion::class.members}")
-            val success = Testp2p.setField("trackerServer", "test")
-            Toast.makeText(this, "success: $success", Toast.LENGTH_SHORT).show()
-            Toast.makeText(this, "success: ${Testp2p.trackerServer}", Toast.LENGTH_SHORT).show()
+//            Log.e("p2p-test", "members size ${Testp2p::class.members.size}")
+//            Log.e("p2p-test", "members ${Testp2p::class.members}")
+//            Log.e("p2p-test", "companion members size ${Testp2p::class.companionObject?.members?.size}")
+//            Log.e("p2p-test", "companion members ${Testp2p::class.companionObject?.members}")
+//            Log.e("p2p-test", "companion members size ${Testp2p.Companion::class.members.size}")
+//            Log.e("p2p-test", "companion members ${Testp2p.Companion::class.members}")
+//            val success = Testp2p.setField("trackerServer", "test")
+//            Toast.makeText(this, "success: $success", Toast.LENGTH_SHORT).show()
+
+//            Log.e("random-test", "random ${Test3().int}")
+
+//            Toast.makeText(
+//                this,
+////                "sdk: ${Build.DISPLAY}, isHarmony: ${isHarmony()}",
+//                "${Test3().int}",
+//                Toast.LENGTH_SHORT
+//            ).show()
+//            Log.e("test-D", "hello world")
+//            test1()
+
+            assets
         }))
         recyclerView.adapter = adapter
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun test1() {
+        val path = Path()
+        path.moveTo(1f, 0f)
+
+    }
+
+    fun isHarmony(): Boolean = try {
+        val classLoader =
+            Class.forName("ohos.aafwk.ability.Ability").classLoader
+        classLoader != null && classLoader.parent == null
+    } catch (e: ClassNotFoundException) {
+        false
     }
 
     private fun test() {
@@ -133,5 +162,7 @@ class MainActivity : AppCompatActivity() {
             Log.e("Thread4", "end")
         }.start()
     }
+
+
 }
 
