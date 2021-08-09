@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
+import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.bilibili.bililive.batteria.R
@@ -46,6 +47,11 @@ class DanmakuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_danmaku)
+
+        val meter = MeteorPathMeter(this)
+        for (i in 1..100) {
+            Log.e("meteor", "path: ${meter.getRandomPath(false)}")
+        }
 
         fakeDanmakuView = findViewById(R.id.fake_danmaku_view)
         fakeDanmakuView?.init(8)
@@ -91,13 +97,14 @@ class DanmakuActivity : AppCompatActivity() {
 
     private fun sendMeteor(scale: Float, alphaScale: Float) {
         val danmaku = danmakuContext?.mDanmakuFactory?.createDanmaku(BaseDanmaku.TYPE_SCROLL_RL)!!
-        danmaku.textSize = sp2px(25f).toFloat()
+        danmaku.textSize = sp2px(26f).toFloat()
 
         val text = "哔哩哔哩干杯"
+//        val text = "艹艹艹艹艹"
         val content = SpannableString("$text")
 
         val span = LiveMeteorSpan(
-            false,
+            true,
             scale,
             alphaScale,
             Color.parseColor("#FFFFFF"),

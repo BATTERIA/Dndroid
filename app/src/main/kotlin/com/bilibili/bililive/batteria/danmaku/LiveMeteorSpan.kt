@@ -26,12 +26,12 @@ class LiveMeteorSpan(
     private val tagRect = RectF()
 
     private val verticalPadding = dp2px(4f) * sizeScale
-    private val paddingLeft = dp2px(18f) * sizeScale
+    private val paddingLeft = dp2px(22f) * sizeScale
 
     private val tail = dp2px(64f)
     private val strokeWidth = dp2px(1.5f)
     private val radius = dp2px(100f)
-    private val textSize = dp2px(16f) * sizeScale
+    private val textSize = dp2px(20f) * sizeScale
 
     override fun getSize(
         paint: Paint,
@@ -41,13 +41,13 @@ class LiveMeteorSpan(
         fm: Paint.FontMetricsInt?
     ): Int {
         // 计算文字尺寸
-        textPaint.textSize = textSize.toFloat()
+        textPaint.textSize = textSize
         val bounds = Rect()
         textPaint.getTextBounds(text.toString(), start, end, bounds)
 
 
         width = (bounds.width() + paddingLeft).toInt()
-        height = (bounds.height() + verticalPadding * 2).toInt()
+        height = dp2px(25f * sizeScale)
 
         return width + tail
     }
@@ -122,7 +122,7 @@ class LiveMeteorSpan(
         val starBottom = bottom - starPadding
         val starTop = top + starPadding
         val starLeft = x + starPadding
-        val starRight = starLeft + (starBottom - starTop) / 4 * 9
+        val starRight = starLeft + (starBottom - starTop) / 54 * 111
         val rect = RectF(starLeft, starTop, starRight, starBottom)
         canvas.drawBitmap((star as BitmapDrawable).bitmap, null, rect, paint)
     }
@@ -145,7 +145,7 @@ class LiveMeteorSpan(
         paint.textAlign = Paint.Align.CENTER
         val textCenterX = x + width / 2 + paddingLeft
         val textBaselineY =
-            top + (bottom - top) / 2 - (textPaint.ascent() + textPaint.descent()) / 2
+            top + (bottom - top) / 2 - (paint.ascent() + paint.descent()) / 2
         val tag = text.subSequence(start, end).toString()
         canvas.drawText(tag, textCenterX, textBaselineY, paint)
     }

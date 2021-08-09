@@ -11,8 +11,8 @@ import android.content.Context;
  * @Author Andy.fang
  * @CreateDate 2019-09-11 15:48
  */
-public final class ScreenUtil {
-    private ScreenUtil() {
+public final class ScreenUtils {
+    private ScreenUtils() {
         throw new UnsupportedOperationException("cannot be instantiated");
     }
 
