@@ -104,27 +104,8 @@ class DragView @JvmOverloads constructor(
                 val dy = rawY - lastY
                 isDrag = isDrag || (dx != 0 || dy != 0)
 
-                var left: Int = left + dx
-                var top: Int = top + dy
-                var right: Int = right + dx
-                var bottom: Int = bottom + dy
-
-                if (left < 0) {
-                    left = 0
-                    right = width
-                }
-                if (right > parentWidth) {
-                    right = parentWidth
-                    left = parentWidth - width
-                }
-                if (top < 0) {
-                    top = 0
-                    bottom = height
-                }
-                if (bottom > parentHeight) {
-                    bottom = parentHeight
-                    top = parentHeight - height
-                }
+                val left: Int = left + dx
+                val top: Int = top + dy
 
                 val params = FrameLayout.LayoutParams(width, height)
 
