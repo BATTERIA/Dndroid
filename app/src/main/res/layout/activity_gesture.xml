@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     tools:context=".gesture.GestureActivity">
-    <com.bilibili.bililive.batteria.gesture.DragView
+    <com.bilibili.bililive.batteria.gesture.DragContainerView
         android:background="@color/colorPrimary"
 
         android:layout_margin="10dp"

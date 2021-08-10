@@ -10,8 +10,8 @@ import android.os.Vibrator
  * @description:
  */
 object VibratorUtil {
-    fun vibrate() {
+    fun vibrate(duration: Long) {
         val service = BiliContext.application?.getSystemService(Service.VIBRATOR_SERVICE) as? Vibrator ?: return
-        service.vibrate(100)
+        service.vibrate(duration)
     }
 }

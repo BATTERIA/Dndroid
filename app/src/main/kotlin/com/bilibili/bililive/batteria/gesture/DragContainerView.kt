@@ -5,79 +5,104 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Paint
 import android.util.AttributeSet
-import android.util.DisplayMetrics
 import android.view.MotionEvent
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import com.bilibili.bililive.batteria.util.HandlerThreads
 import com.bilibili.bililive.batteria.util.VibratorUtil
-import com.blankj.utilcode.util.ConvertUtils.dp2px
-import kotlin.math.abs
 
 /**
  * @author: yaobeihaoyu
  * @version: 1.0
  * @since: 2021/8/9
- * @description:
+ * @description: 拖拽容器
+ * [setInnerView] 动态设置内部View
  */
-class DragView @JvmOverloads constructor(
+class DragContainerView @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : androidx.appcompat.widget.AppCompatImageView(context, attributeSet, defStyleAttr) {
+) : FrameLayout(context, attributeSet, defStyleAttr) {
     var index = 0
     var data: DistrictData? = null
 
-    private var isDrag = true
     private var isLongTouch = false
 
     private var lastX = 0
     private var lastY = 0
     private var beginX = 0
     private var beginY = 0
-    private var parentWidth = 720
-    private var parentHeight = 1280
+    private var parentWidth = 0
+    private var parentHeight = 0
 
-    var showBorder = false
+    private var borderWidth: Int = 20
+    private var vibrateEnable: Boolean = true
+    private var vibrateDuration: Long = 0
+    private var shrinkScale: Float = 0.8f
+    private var shrinkDuration: Long = 200
+    private var exchangeDuration: Long = 500
+
+    private var innerView: View? = null
+    private var borderView: BorderView? = null
 
     private var anims = mutableListOf<AnimatorSet>()
 
+    private var dragInnerCallback: DragInnerCallback? = null
+
     private val longTouchRunnable = Runnable {
         isLongTouch = true
-        VibratorUtil.vibrate()
+
+        // 震动
+        if (vibrateEnable) VibratorUtil.vibrate(vibrateDuration)
+
+        // 移动到顶部
         dragInnerCallback?.moveToTop(this)
 
         // 边框
-        showBorder = true
+        borderEnable(true)
 
         // 缩小
         shrink()
     }
 
-    private var dragInnerCallback: DragInnerCallback? = null
-
-    private val paint = Paint()
-
     init {
-        initData(context)
-        initPaint()
         isClickable = true
+        setWillNotDraw(false)
+    }
+
+    fun setInnerView(view: View) {
+        innerView = view
+        addView(view)
+        borderView = BorderView(context).apply {
+            setBorderWidth(borderWidth)
+            visibility = View.GONE
+        }
+        addView(borderView)
+    }
+
+    fun setConfig(config: DragConfig?) {
+        config ?: return
+        borderWidth = config.borderWidth
+        vibrateEnable = config.vibrateEnable
+        shrinkScale = config.shrinkScale
+        shrinkDuration = config.shrinkDuration
+        exchangeDuration = config.exchangeDuration
+        vibrateDuration = config.vibrateDuration
     }
 
     fun setCallback(callback: DragInnerCallback) {
         dragInnerCallback = callback
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val mViewGroup = parent as ViewGroup
-        if (mViewGroup.width > 0) parentWidth = mViewGroup.width
-        if (mViewGroup.height > 0) parentHeight = mViewGroup.height
+    fun borderEnable(enable: Boolean) {
+        borderView?.visibility = if (enable) View.VISIBLE else View.GONE
+    }
+
+    fun initSize(width: Int, height: Int) {
+        parentWidth = width
+        parentHeight = height
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -102,12 +127,11 @@ class DragView @JvmOverloads constructor(
 
                 val dx = rawX - lastX
                 val dy = rawY - lastY
-                isDrag = isDrag || (dx != 0 || dy != 0)
 
                 val left: Int = left + dx
                 val top: Int = top + dy
 
-                val params = FrameLayout.LayoutParams(width, height)
+                val params = LayoutParams(width, height)
 
                 val r = parentWidth - left - width
                 val b = parentHeight - top - height
@@ -117,39 +141,27 @@ class DragView @JvmOverloads constructor(
                 lastY = rawY
             }
             MotionEvent.ACTION_UP -> {
-                if (isLongTouch) dragInnerCallback?.dragFinish(this,rawX, rawY)
+                if (isLongTouch) dragInnerCallback?.dragFinish(this, rawX, rawY)
 
-                showBorder = false
+                borderEnable(false)
                 isLongTouch = false
                 HandlerThreads.remove(HandlerThreads.THREAD_UI, longTouchRunnable)
 
-                if (!isDrag) performClick()
-                return if (abs(lastX - beginX) < 10 && abs(lastY - beginY) < 10) {
-                    super.onTouchEvent(event)
-                } else {
-                    isPressed = false
-                    true
-                }
+                return true
             }
         }
         return super.onTouchEvent(event)
     }
 
-    override fun onDraw(canvas: Canvas?) {
-        super.onDraw(canvas)
-        if (showBorder) canvas?.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
-    }
-
     fun moveToDistrict(target: DistrictData?) {
         if (target != null) data = target
         val d = data ?: return
-        val lp = layoutParams as FrameLayout.LayoutParams
+        val lp = layoutParams as LayoutParams
         val l = lp.leftMargin
         val t = lp.topMargin
 
         val curX = l + width / 2
         val curY = t + height / 2
-        if (curX == d.midX && curY == d.midY) return
         val animatorSet = AnimatorSet()
         animatorSet.interpolator = DecelerateInterpolator()
         val anim0 = ObjectAnimator.ofFloat(this, "translationX", 0f, (d.midX - curX).toFloat())
@@ -157,9 +169,9 @@ class DragView @JvmOverloads constructor(
         val anim2 = ObjectAnimator.ofFloat(this, "scaleX", 1f, d.width.toFloat() / width)
         val anim3 = ObjectAnimator.ofFloat(this, "scaleY", 1f, d.height.toFloat() / height)
         animatorSet.playTogether(anim0, anim1, anim2, anim3)
-        animatorSet.duration = 500
+        animatorSet.duration = exchangeDuration
         animatorSet.start()
-        showBorder = false
+        borderEnable(false)
         animatorSet.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) = Unit
 
@@ -168,7 +180,7 @@ class DragView @JvmOverloads constructor(
                 translationY = 0f
                 scaleX = 1f
                 scaleY = 1f
-                val newLp = FrameLayout.LayoutParams(d.width, d.height)
+                val newLp = LayoutParams(d.width, d.height)
                 newLp.setMargins(d.left, d.top, d.right, d.bottom)
                 layoutParams = newLp
             }
@@ -183,10 +195,10 @@ class DragView @JvmOverloads constructor(
     private fun shrink() {
         val animatorSet = AnimatorSet()
         animatorSet.interpolator = DecelerateInterpolator()
-        val anim0 = ObjectAnimator.ofFloat(this, "scaleX", 1f, 0.8f)
-        val anim1 = ObjectAnimator.ofFloat(this, "scaleY", 1f, 0.8f)
+        val anim0 = ObjectAnimator.ofFloat(this, "scaleX", 1f, shrinkScale)
+        val anim1 = ObjectAnimator.ofFloat(this, "scaleY", 1f, shrinkScale)
         animatorSet.playTogether(anim0, anim1)
-        animatorSet.duration = 200
+        animatorSet.duration = shrinkDuration
         animatorSet.start()
         anims.add(animatorSet)
     }
@@ -195,23 +207,5 @@ class DragView @JvmOverloads constructor(
         super.onDetachedFromWindow()
         HandlerThreads.remove(HandlerThreads.THREAD_UI, longTouchRunnable)
         anims.forEach { it.cancel() }
-    }
-
-    private fun initData(context: Context) {
-        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val dm = DisplayMetrics()
-        wm.defaultDisplay.getMetrics(dm)
-        parentWidth = dm.widthPixels
-        parentHeight = dm.heightPixels
-    }
-
-    private fun initPaint() {
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = dp2px(20f).toFloat()
-        paint.color = BORDER_COLOR.toInt()
-    }
-
-    companion object {
-        private const val BORDER_COLOR = 0xFFFD6D8C
     }
 }
