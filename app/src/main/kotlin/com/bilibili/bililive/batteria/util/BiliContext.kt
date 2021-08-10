@@ -19,6 +19,6 @@ import com.bilibili.bililive.batteria.MainApplication
  * @property mainHandler handler wrap [Looper.getMainLooper]
  */
 object BiliContext {
-
+    var application: Application? = null
 }
 

@@ -2,6 +2,7 @@ package com.bilibili.bililive.batteria
 
 import android.app.Application
 import android.util.Log
+import com.bilibili.bililive.batteria.util.BiliContext
 import com.didi.hummer.Hummer
 import com.didi.hummer.HummerConfig
 
@@ -15,6 +16,7 @@ import com.didi.hummer.HummerConfig
 class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        BiliContext.application = this
         val config = HummerConfig.Builder()
             .setJSLogger { _: Int, msg: String ->
                 Log.d(
