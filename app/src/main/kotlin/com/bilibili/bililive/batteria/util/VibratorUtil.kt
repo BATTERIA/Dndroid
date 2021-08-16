@@ -11,7 +11,10 @@ import android.os.Vibrator
  */
 object VibratorUtil {
     fun vibrate(duration: Long) {
-        val service = BiliContext.application?.getSystemService(Service.VIBRATOR_SERVICE) as? Vibrator ?: return
-        service.vibrate(duration)
+        try {
+            val service = BiliContext.application?.getSystemService(Service.VIBRATOR_SERVICE) as? Vibrator ?: return
+            service.vibrate(duration)
+        } catch (e: Exception) {
+        }
     }
 }

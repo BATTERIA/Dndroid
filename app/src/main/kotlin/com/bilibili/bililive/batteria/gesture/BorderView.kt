@@ -5,7 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import com.blankj.utilcode.util.ConvertUtils
+import com.blankj.utilcode.util.ConvertUtils.dp2px
 
 /**
  * @author: yaobeihaoyu
@@ -23,7 +23,7 @@ class BorderView @JvmOverloads constructor(
 
     init {
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = ConvertUtils.dp2px(borderWidth.toFloat()).toFloat()
+        paint.strokeWidth = dp2px(borderWidth.toFloat()).toFloat()
         paint.color = BORDER_COLOR.toInt()
     }
 

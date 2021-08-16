@@ -11,6 +11,7 @@ package com.bilibili.bililive.batteria.gesture
  * [exchangeDuration] 交换动画时长 单位ms
  * [vibrateEnable] 长按是否震动
  * [vibrateDuration] 震动时长
+ * [dragEnable] 拖拽能力开关
  */
 data class DragConfig(
     val borderWidth: Int,
@@ -18,5 +19,6 @@ data class DragConfig(
     val shrinkDuration: Long,
     val exchangeDuration: Long,
     val vibrateEnable: Boolean,
-    val vibrateDuration: Long = 0L
+    val vibrateDuration: Long = 0L,
+    val dragEnable: Boolean = true
 )

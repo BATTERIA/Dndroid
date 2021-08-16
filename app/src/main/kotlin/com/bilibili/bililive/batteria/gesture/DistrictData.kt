@@ -45,7 +45,9 @@ data class DistrictData(
     var midX = 0
     var midY = 0
 
+    var isInit = false
     fun initData(l: Int, t: Int, r: Int, b: Int, w: Int, h: Int) {
+        isInit = true
         left = l
         top = t
         right = r

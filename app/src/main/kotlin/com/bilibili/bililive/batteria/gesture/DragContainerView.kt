@@ -11,6 +11,7 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import com.bilibili.bililive.batteria.util.HandlerThreads
+import com.bilibili.bililive.batteria.util.LiveLogger
 import com.bilibili.bililive.batteria.util.VibratorUtil
 
 /**
@@ -24,7 +25,7 @@ class DragContainerView @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : FrameLayout(context, attributeSet, defStyleAttr) {
+) : FrameLayout(context, attributeSet, defStyleAttr), LiveLogger {
     var index = 0
     var data: DistrictData? = null
 
@@ -43,6 +44,8 @@ class DragContainerView @JvmOverloads constructor(
     private var shrinkScale: Float = 0.8f
     private var shrinkDuration: Long = 200
     private var exchangeDuration: Long = 500
+    var dragEnable: Boolean = true
+    var isInit = false
 
     private var innerView: View? = null
     private var borderView: BorderView? = null
@@ -64,6 +67,7 @@ class DragContainerView @JvmOverloads constructor(
         borderEnable(true)
 
         // 缩小
+        dragInnerCallback?.stopAnim()
         shrink()
     }
 
@@ -90,6 +94,7 @@ class DragContainerView @JvmOverloads constructor(
         shrinkDuration = config.shrinkDuration
         exchangeDuration = config.exchangeDuration
         vibrateDuration = config.vibrateDuration
+        dragEnable = config.dragEnable
     }
 
     fun setCallback(callback: DragInnerCallback) {
@@ -105,11 +110,16 @@ class DragContainerView @JvmOverloads constructor(
         parentHeight = height
     }
 
+    fun stopAnim() {
+        anims.forEach { it.cancel() }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!dragEnable) return super.onTouchEvent(event)
+
         val rawX = event.rawX.toInt()
         val rawY = event.rawY.toInt()
-        requestLayout()
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 HandlerThreads.postDelayed(HandlerThreads.THREAD_UI, longTouchRunnable, 500)
@@ -131,12 +141,14 @@ class DragContainerView @JvmOverloads constructor(
                 val left: Int = left + dx
                 val top: Int = top + dy
 
-                val params = LayoutParams(width, height)
+                val lp = layoutParams as? MarginLayoutParams
+                lp?.width = width
+                lp?.height = height
 
                 val r = parentWidth - left - width
                 val b = parentHeight - top - height
-                params.setMargins(left, top, r, b)
-                layoutParams = params
+                lp?.setMargins(left, top, r, b)
+                layoutParams = lp
                 lastX = rawX
                 lastY = rawY
             }
@@ -156,7 +168,7 @@ class DragContainerView @JvmOverloads constructor(
     fun moveToDistrict(target: DistrictData?) {
         if (target != null) data = target
         val d = data ?: return
-        val lp = layoutParams as LayoutParams
+        val lp = layoutParams as MarginLayoutParams
         val l = lp.leftMargin
         val t = lp.topMargin
 
@@ -166,8 +178,9 @@ class DragContainerView @JvmOverloads constructor(
         animatorSet.interpolator = DecelerateInterpolator()
         val anim0 = ObjectAnimator.ofFloat(this, "translationX", 0f, (d.midX - curX).toFloat())
         val anim1 = ObjectAnimator.ofFloat(this, "translationY", 0f, (d.midY - curY).toFloat())
-        val anim2 = ObjectAnimator.ofFloat(this, "scaleX", 1f, d.width.toFloat() / width)
-        val anim3 = ObjectAnimator.ofFloat(this, "scaleY", 1f, d.height.toFloat() / height)
+        val anim2 = ObjectAnimator.ofFloat(this, "scaleX", shrinkScale, d.width.toFloat() / width)
+        val anim3 = ObjectAnimator.ofFloat(this, "scaleY", shrinkScale, d.height.toFloat() / height)
+
         animatorSet.playTogether(anim0, anim1, anim2, anim3)
         animatorSet.duration = exchangeDuration
         animatorSet.start()
@@ -180,9 +193,10 @@ class DragContainerView @JvmOverloads constructor(
                 translationY = 0f
                 scaleX = 1f
                 scaleY = 1f
-                val newLp = LayoutParams(d.width, d.height)
-                newLp.setMargins(d.left, d.top, d.right, d.bottom)
-                layoutParams = newLp
+                lp.width = d.width
+                lp.height = d.height
+                lp.setMargins(d.left, d.top, d.right, d.bottom)
+                layoutParams = lp
             }
 
             override fun onAnimationCancel(animation: Animator?) = Unit
@@ -206,6 +220,13 @@ class DragContainerView @JvmOverloads constructor(
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         HandlerThreads.remove(HandlerThreads.THREAD_UI, longTouchRunnable)
-        anims.forEach { it.cancel() }
+        stopAnim()
+    }
+
+    override val logTag: String
+        get() = TAG
+
+    companion object {
+        private const val TAG = "DragContainerView"
     }
 }
