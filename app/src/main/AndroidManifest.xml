@@ -34,7 +34,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".webview.WebViewActivity" />
-        <activity android:name=".imageloader.ImageLoaderActivity" />
+<!--            android:process=":web"/>-->
+        <activity android:name=".imageloader.ImageLoaderActivity"
+            android:launchMode="singleTask"/>
+
     </application>
 
 </manifest>

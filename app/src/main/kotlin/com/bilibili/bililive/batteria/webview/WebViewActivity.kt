@@ -1,8 +1,10 @@
 package com.bilibili.bililive.batteria.webview
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.net.http.SslError
 import android.os.Bundle
+import android.util.Log
 import android.webkit.*
 import android.widget.Button
 import android.widget.ImageView
@@ -10,6 +12,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bilibili.bililive.batteria.R
+import com.bilibili.bililive.batteria.imageloader.ImageLoaderActivity
 
 /**
  * @author: yaobeihaoyu
@@ -89,8 +92,18 @@ class WebViewActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.button).setOnClickListener {
-            webView?.loadUrl("https://www.baidu.com")
+//            webView?.loadUrl("https://www.baidu.com")
+            startActivityForResult(Intent(this, ImageLoaderActivity::class.java), 111)
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.d("test-D", "requestCode: $requestCode, resultCode: $resultCode")
     }
 
     companion object {

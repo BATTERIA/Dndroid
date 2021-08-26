@@ -2,10 +2,12 @@ package com.bilibili.bililive.batteria.imageloader
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.graphics.RectF
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ImageSpan
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
@@ -14,6 +16,7 @@ import com.bilibili.bililive.batteria.R
 import com.bilibili.bililive.batteria.danmaku.Danmaku
 import com.bilibili.bililive.batteria.danmaku.TestView
 import com.bilibili.bililive.batteria.util.HandlerThreads
+import com.bilibili.bililive.batteria.webview.WebViewActivity
 import kotlinx.coroutines.*
 import java.io.File
 
@@ -46,7 +49,9 @@ class ImageLoaderActivity : AppCompatActivity(), CoroutineScope by MainScope() {
         test = findViewById(R.id.test)
 
         findViewById<Button>(R.id.add).setOnClickListener {
-            test?.add(Danmaku("测试", 0f, 1, 1))
+//            test?.add(Danmaku("测试", 0f, 1, 1))
+//            startActivityForResult(Intent(this, ImageLoaderActivity::class.java), 111)
+            startActivity(Intent(this, WebViewActivity::class.java))
         }
 
         findViewById<Button>(R.id.stop).setOnClickListener {
@@ -76,6 +81,15 @@ class ImageLoaderActivity : AppCompatActivity(), CoroutineScope by MainScope() {
 //        val imageSpan = ImageSpan(d, ImageSpan.ALIGN_BASELINE)
 //        spanString.setSpan(imageSpan, 1, 3, 0)
 //        findViewById<TextView>(R.id.tv).text = spanString
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.d("test-D", "requestCode: $requestCode, resultCode: $resultCode")
     }
 
     override fun onDestroy() {
