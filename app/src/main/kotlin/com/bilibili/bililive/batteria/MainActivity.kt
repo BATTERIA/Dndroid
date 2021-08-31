@@ -14,6 +14,7 @@ import com.bilibili.bililive.batteria.imageloader.ImageLoaderActivity
 import com.bilibili.bililive.batteria.opengl.OpenglActivity
 import com.bilibili.bililive.batteria.recycler.RecyclerActivity
 import com.bilibili.bililive.batteria.webview.WebViewActivity
+import com.bilibili.bililive.batteria.wordmerge.WordMergeActivity
 import com.bilibili.bililive.infra.util.cache.api.CacheActivity
 
 @Keep
@@ -47,6 +48,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, OpenglActivity::class.java))
         }, Item("Gesture", R.drawable.list) {
             startActivity(Intent(this, GestureActivity::class.java))
+        }, Item("WordMerge", R.drawable.list) {
+            startActivity(Intent(this, WordMergeActivity::class.java))
         }, Item("Touch", R.drawable.ic_more_cache) {
         }))
         recyclerView.adapter = adapter

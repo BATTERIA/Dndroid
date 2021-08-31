@@ -3,8 +3,7 @@
     package="com.bilibili.bililive.batteria">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <uses-permission  android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".MainApplication"
@@ -14,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".wordmerge.WordMergeActivity"></activity>
         <activity
             android:name=".gesture.GestureActivity"
             android:configChanges="orientation|keyboardHidden"
@@ -33,11 +33,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".webview.WebViewActivity" />
-<!--            android:process=":web"/>-->
-        <activity android:name=".imageloader.ImageLoaderActivity"
-            android:launchMode="singleTask"/>
-
+        <activity android:name=".webview.WebViewActivity" /> <!-- android:process=":web"/> -->
+        <activity
+            android:name=".imageloader.ImageLoaderActivity"
+            android:launchMode="singleTask" />
     </application>
 
 </manifest>
