@@ -1,10 +1,8 @@
 package com.bilibili.bililive.batteria.wordmerge
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
+import android.graphics.*
+import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
 import com.bilibili.bililive.batteria.util.LiveLogger
@@ -27,9 +25,11 @@ class WordMergeView @JvmOverloads constructor(
 
     private val colors = listOf(Color.BLACK, Color.BLUE, Color.RED)
 
-    private val texts = listOf("哔哩哔哩干杯", "英雄联盟", "圣诞节", "BILIBILI", "bilibili live")
+    private val texts = listOf("哔哩哔哩干杯", "英雄联盟", "圣诞节", "BILIBILI", "bilibili live", "OHH", "再见EVA", "ANIBER", "雷霆战记", "下次不一定", "干杯")
 
     private val textData = mutableListOf<TextData>()
+
+    private val border = ConvertUtils.dp2px(2.toFloat()).toFloat()
 
     private val mockData = listOf(
         listOf(100, 50),
@@ -43,24 +43,30 @@ class WordMergeView @JvmOverloads constructor(
 
     private var length = 3
 
-    private val paint = Paint()
+    private val paint = TextPaint()
 
     private val random = Random()
 
-    private val textSizes = listOf(9, 12, 13)
+    private val textSizes = listOf(13, 14, 16, 16, 19, 19, 20)
 
     init {
-        paint.style = Paint.Style.STROKE
-        paint.strokeWidth = ConvertUtils.dp2px(1.toFloat()).toFloat()
+        paint.style = Paint.Style.FILL_AND_STROKE
+        paint.strokeWidth = 2f
+//        paint.strokeWidth = ConvertUtils.dp2px(1.toFloat()).toFloat()
+        paint.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        paint.isFakeBoldText = true
+        paint.setShadowLayer(20f, 0f, 0f, 0xFFEE82EE.toInt())
+
         paint.color = Color.BLACK
         paint.textSize = ConvertUtils.dp2px(9.toFloat()).toFloat()
         texts.forEach {
-            val textSize = ConvertUtils.dp2px(textSizes[random.nextInt(3)].toFloat()).toFloat()
+            val textSize = ConvertUtils.dp2px(textSizes[random.nextInt(5)].toFloat()).toFloat()
             paint.textSize = textSize
             val rect = Rect()
             paint.getTextBounds(it, 0, it.length, rect)
-            val h = rect.height()
-            textData.add(TextData(it, rect.width(), h, rect.bottom, textSize))
+            val w = rect.width() + border.toInt() * 2
+            val h = rect.height() + border.toInt() * 2
+            textData.add(TextData(it, w, h, rect.bottom, textSize))
             if (h > maxHeight) maxHeight = h
         }
         length = texts.size
@@ -96,21 +102,32 @@ class WordMergeView @JvmOverloads constructor(
                     }
                 }
 
-                // 删除太短的空间 10
+                // 遍历横向联通区域
                 list.forEach {
                     var left = it[0]
                     val right = it[1]
                     var goalWidth = right - left
-                    if (goalWidth < 10) return@forEach
-                    while (goalWidth > 0) {
+                    // 删除太短的空间
+                    if (goalWidth < 100) return@forEach
+
+                    // 记录重试次数 length
+                    var times = 0
+                    while (goalWidth > 0 && times < length * 2) {
                         val index = Random().nextInt(length)
 
                         val d = textData[index]
                         val tW = d.width
                         val tH = d.height
-                        renderData.add(RenderData(d.text, Rect(left, top, left + tW, top + tH), d.bottom, d.textSize))
-                        goalWidth -= tW
-                        left += tW
+
+                        // 随机文字过长跳过
+                        if (tW <= goalWidth + 50) {
+                            renderData.add(RenderData(d.text, Rect(left, top, left + tW, top + tH), d.bottom, d.textSize))
+                            goalWidth -= tW
+                            left += tW
+                            times = 0
+                        } else {
+                            times++
+                        }
                     }
                 }
 
@@ -121,13 +138,33 @@ class WordMergeView @JvmOverloads constructor(
         }
     }
 
+    fun changeColor(isPurple: Boolean) {
+        paint.setShadowLayer(20f, 0f, 0f, (if (isPurple) 0xFFEE82EE else 0xFFA1F5F5).toInt())
+        invalidate()
+    }
+
     override fun onDraw(canvas: Canvas?) {
         renderData.forEach {
-            paint.color = colors[random.nextInt(3)]
+            paint.style = Paint.Style.FILL_AND_STROKE
+            paint.color = Color.WHITE
             paint.textSize = it.textSize
+            // debug用 外边框
 //            canvas?.drawRect(it.rect, paint)
 
-            canvas?.drawText(it.text, it.rect.left.toFloat(), it.rect.bottom.toFloat() - it.bottom, paint)
+            canvas?.drawText(it.text, it.rect.left.toFloat() + border, it.rect.bottom.toFloat() - it.bottom - border, paint)
+
+            paint.style = Paint.Style.STROKE
+            paint.color = Color.BLACK
+
+            canvas?.drawText(it.text, it.rect.left.toFloat() + border, it.rect.bottom.toFloat() - it.bottom - border, paint)
+
+            // 需要提前计算好，并且加入到外边框里
+//            paint.textSize = it.textSize + ConvertUtils.dp2px(1f)
+//            val rect = Rect()
+//            paint.getTextBounds(it.text, 0, it.text.length, rect)
+//
+//            it.rect.width() - rect.width()
+//            canvas?.drawText(it.text, it.rect.left.toFloat() + border, it.rect.bottom.toFloat() - it.bottom - border, paint)
         }
     }
 }
