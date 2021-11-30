@@ -13,8 +13,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".wordmerge.WordMergeActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".flow.FlowActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".wordmerge.WordMergeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".gesture.GestureActivity"
             android:configChanges="orientation|keyboardHidden"

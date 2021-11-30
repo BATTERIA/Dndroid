@@ -4,9 +4,9 @@
     <bytecodeTargetLevel>
       <module name="live-lint" target="1.7" />
       <module name="test_lint" target="1.7" />
-      <module name="Tests.app" target="1.8" />
-      <module name="Tests.mylibrary" target="1.8" />
-      <module name="Tests.test_lint" target="1.8" />
+      <module name="Tests.app" target="11" />
+      <module name="Tests.mylibrary" target="11" />
+      <module name="Tests.test_lint" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

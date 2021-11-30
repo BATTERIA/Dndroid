@@ -3,12 +3,16 @@ package com.bilibili.bililive.batteria
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bilibili.bililive.batteria.danmaku.DanmakuActivity
+import com.bilibili.bililive.batteria.flow.FlowActivity
 import com.bilibili.bililive.batteria.gesture.GestureActivity
 import com.bilibili.bililive.batteria.imageloader.ImageLoaderActivity
 import com.bilibili.bililive.batteria.opengl.OpenglActivity
@@ -16,9 +20,13 @@ import com.bilibili.bililive.batteria.recycler.RecyclerActivity
 import com.bilibili.bililive.batteria.webview.WebViewActivity
 import com.bilibili.bililive.batteria.wordmerge.WordMergeActivity
 import com.bilibili.bililive.infra.util.cache.api.CacheActivity
+import kotlinx.coroutines.*
 
 @Keep
 class MainActivity : AppCompatActivity() {
+
+    var viewModel: MainViewModel? = null
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +58,40 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, GestureActivity::class.java))
         }, Item("WordMerge", R.drawable.list) {
             startActivity(Intent(this, WordMergeActivity::class.java))
+        }, Item("DragFlowLayout", R.drawable.tag) {
+            startActivity(Intent(this, FlowActivity::class.java))
         }, Item("Touch", R.drawable.ic_more_cache) {
+            runBlocking {
+                delay(123)
+                val scope = coroutineScope {
+                    launch {
+
+                    }
+                }
+                scope.cancel()
+            }
+            lifecycleScope.launch {
+                Log.e("test-D", "test ${Thread.currentThread().name}")
+                coroutineScope {
+                    launch {
+
+                    }
+                }
+            }
+            MainScope().launch {
+                Log.e("test-D", "test ${Thread.currentThread().name}")
+                withContext(NonCancellable) {
+
+                }
+
+                GlobalScope.launch(CoroutineExceptionHandler { coroutineContext, throwable ->  }) {
+
+                }
+            }
         }))
         recyclerView.adapter = adapter
+
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
     }
 }
 
