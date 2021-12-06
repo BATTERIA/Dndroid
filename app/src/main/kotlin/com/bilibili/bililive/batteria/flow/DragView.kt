@@ -63,13 +63,11 @@ class DragView @JvmOverloads constructor(
         // 震动
         if (vibrateEnable) VibratorUtil.vibrate(vibrateDuration)
 
-        // 移动到顶部
-//        dragInnerCallback?.moveToTop(this)
-
         // 边框
         borderEnable(true)
 
         getTemp().generateStub(getTemp().indexOfChild(this), Size(width, height))
+        getTemp().setDraggingView(this)
     }
 
     init {
@@ -121,6 +119,7 @@ class DragView @JvmOverloads constructor(
                 // todo 延时使用协程
                 HandlerThreads.postDelayed(HandlerThreads.THREAD_UI, longTouchRunnable, 500)
                 isDragging = false
+                getTemp().removeDraggingView()
 
                 lastX = rawX
                 lastY = rawY
@@ -130,36 +129,32 @@ class DragView @JvmOverloads constructor(
             MotionEvent.ACTION_MOVE -> {
                 if (!isDragging) return false
 
-//                dragInnerCallback?.isInOtherDistrict(this, rawX, rawY)
+                println("DTEST $rawX, $rawY")
+
                 getTemp().detectViewCollision(this, rawX, rawY)
 
                 val dx = rawX - lastX
                 val dy = rawY - lastY
 
-                val left: Int = left + dx
-                val top: Int = top + dy
+                val lc = left + dx
+                val tc = top + dy
+                val rc = lc + measuredWidth
+                val bc = tc + measuredHeight
+                layout(lc, tc, rc, bc)
 
-                val lp = layoutParams as? MarginLayoutParams
-                lp?.width = width
-                lp?.height = height
-
-                lp?.setMargins(left, top, 0, 0)
-                layoutParams = lp
                 lastX = rawX
                 lastY = rawY
             }
             MotionEvent.ACTION_UP -> {
-//                if (isLongTouch) dragInnerCallback?.dragFinish(this, rawX, rawY)
-
                 borderEnable(false)
-                isDragging = false
+
                 HandlerThreads.remove(HandlerThreads.THREAD_UI, longTouchRunnable)
 
-                val lp = layoutParams as? MarginLayoutParams
-                lp?.setMargins(0, 0, 0, 0)
-                layoutParams = lp
-
-                getTemp().replaceStub(this)
+                // 落地
+                getTemp().replaceStub(this) {
+                    isDragging = false
+                    getTemp().removeDraggingView()
+                }
 
                 return true
             }

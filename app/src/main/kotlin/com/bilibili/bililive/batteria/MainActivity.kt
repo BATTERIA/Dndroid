@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bilibili.bililive.batteria.animation.AnimationTestActivity
 import com.bilibili.bililive.batteria.danmaku.DanmakuActivity
 import com.bilibili.bililive.batteria.flow.FlowActivity
 import com.bilibili.bililive.batteria.gesture.GestureActivity
@@ -60,6 +61,8 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, WordMergeActivity::class.java))
         }, Item("DragFlowLayout", R.drawable.tag) {
             startActivity(Intent(this, FlowActivity::class.java))
+        }, Item("AnimationTest", R.drawable.animation) {
+            startActivity(Intent(this, AnimationTestActivity::class.java))
         }, Item("Touch", R.drawable.ic_more_cache) {
             runBlocking {
                 delay(123)
