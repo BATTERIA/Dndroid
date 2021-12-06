@@ -7,7 +7,7 @@
     android:padding="20dp"
     tools:context=".flow.FlowActivity">
 
-    <com.bilibili.bililive.batteria.flow.FlowLayout
+    <com.bilibili.bililive.batteria.flow.DragFlowLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -133,6 +133,6 @@
                 android:textSize="20sp" />
         </com.bilibili.bililive.batteria.flow.DragView>
 
-    </com.bilibili.bililive.batteria.flow.FlowLayout>
+    </com.bilibili.bililive.batteria.flow.DragFlowLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

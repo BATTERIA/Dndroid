@@ -50,11 +50,6 @@ class DragView @JvmOverloads constructor(
     var dragEnable: Boolean = true
     var isInit = false
 
-    private var innerView: View? = null
-    private var borderView: BorderView? = null
-
-    private var anims = mutableListOf<AnimatorSet>()
-
 //    private var dragInnerCallback: DragInnerCallback? = null
 
     private val longTouchRunnable = Runnable {
@@ -63,9 +58,6 @@ class DragView @JvmOverloads constructor(
         // 震动
         if (vibrateEnable) VibratorUtil.vibrate(vibrateDuration)
 
-        // 边框
-        borderEnable(true)
-
         getTemp().generateStub(getTemp().indexOfChild(this), Size(width, height))
         getTemp().setDraggingView(this)
     }
@@ -73,16 +65,6 @@ class DragView @JvmOverloads constructor(
     init {
         isClickable = true
         setWillNotDraw(false)
-    }
-
-    fun setInnerView(view: View) {
-        innerView = view
-        addView(view)
-        borderView = BorderView(context).apply {
-            setBorderWidth(borderWidth)
-            visibility = View.GONE
-        }
-        addView(borderView)
     }
 
     fun setConfig(config: DragConfig?) {
@@ -100,14 +82,6 @@ class DragView @JvmOverloads constructor(
 //        dragInnerCallback = callback
     }
 
-    fun borderEnable(enable: Boolean) {
-        borderView?.visibility = if (enable) View.VISIBLE else View.GONE
-    }
-
-    fun stopAnim() {
-        anims.forEach { it.cancel() }
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!dragEnable) return super.onTouchEvent(event)
@@ -116,10 +90,11 @@ class DragView @JvmOverloads constructor(
         val rawY = event.rawY.toInt()
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                // todo 延时使用协程
-                HandlerThreads.postDelayed(HandlerThreads.THREAD_UI, longTouchRunnable, 500)
                 isDragging = false
                 getTemp().removeDraggingView()
+
+                // todo 延时使用协程
+                HandlerThreads.postDelayed(HandlerThreads.THREAD_UI, longTouchRunnable, 500)
 
                 lastX = rawX
                 lastY = rawY
@@ -146,9 +121,9 @@ class DragView @JvmOverloads constructor(
                 lastY = rawY
             }
             MotionEvent.ACTION_UP -> {
-                borderEnable(false)
-
                 HandlerThreads.remove(HandlerThreads.THREAD_UI, longTouchRunnable)
+
+                if (!isDragging) return false
 
                 // 落地
                 getTemp().replaceStub(this) {
@@ -162,54 +137,12 @@ class DragView @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
-    fun moveToDistrict(target: DistrictData?) {
-        if (target != null) data = target
-        val d = data ?: return
-        val lp = layoutParams as MarginLayoutParams
-        val l = lp.leftMargin
-        val t = lp.topMargin
-
-        val curX = l + width / 2
-        val curY = t + height / 2
-        val animatorSet = AnimatorSet()
-        animatorSet.interpolator = DecelerateInterpolator()
-        val anim0 = ObjectAnimator.ofFloat(this, "translationX", 0f, (d.midX - curX).toFloat())
-        val anim1 = ObjectAnimator.ofFloat(this, "translationY", 0f, (d.midY - curY).toFloat())
-        val anim2 = ObjectAnimator.ofFloat(this, "scaleX", shrinkScale, d.width.toFloat() / width)
-        val anim3 = ObjectAnimator.ofFloat(this, "scaleY", shrinkScale, d.height.toFloat() / height)
-
-        animatorSet.playTogether(anim0, anim1, anim2, anim3)
-        animatorSet.duration = exchangeDuration
-        animatorSet.start()
-        borderEnable(false)
-        animatorSet.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) = Unit
-
-            override fun onAnimationEnd(animation: Animator?) {
-                translationX = 0f
-                translationY = 0f
-                scaleX = 1f
-                scaleY = 1f
-                lp.width = d.width
-                lp.height = d.height
-                lp.setMargins(d.left, d.top, d.right, d.bottom)
-                layoutParams = lp
-            }
-
-            override fun onAnimationCancel(animation: Animator?) = Unit
-
-            override fun onAnimationStart(animation: Animator?) = Unit
-        })
-        anims.add(animatorSet)
-    }
-
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         HandlerThreads.remove(HandlerThreads.THREAD_UI, longTouchRunnable)
-        stopAnim()
     }
 
-    private fun getTemp(): FlowLayout = parent as FlowLayout
+    private fun getTemp(): DragFlowLayout = parent as DragFlowLayout
 
     override val logTag: String
         get() = TAG
