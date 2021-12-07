@@ -1,4 +1,4 @@
-package com.bilibili.bililive.batteria.flow
+package com.bilibili.bililive.batteria.flow.drag
 
 import android.animation.Animator
 import android.animation.ValueAnimator
@@ -6,6 +6,11 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Space
+import com.bilibili.bililive.batteria.flow.*
+import com.bilibili.bililive.batteria.flow.core.FlowLayout
+import com.bilibili.bililive.batteria.flow.internal.InnerDragController
+import com.bilibili.bililive.batteria.flow.model.Location
+import com.bilibili.bililive.batteria.flow.model.Size
 import java.util.*
 
 /**
@@ -18,7 +23,10 @@ class DragFlowLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-) : FlowLayout(context, attrs, defStyle), DragLayoutController {
+) : FlowLayout(context, attrs, defStyle), InnerDragController {
+    private var dragTagAdapter: IDragTagAdapter<*, *>? = null
+    private var viewHolders = mutableListOf<IDragTagViewHolder>()
+
     /**
      * 拖拽时的占位视图
      */
@@ -39,6 +47,43 @@ class DragFlowLayout @JvmOverloads constructor(
     // 拖拽View移动到占位View动画
     private var replaceStubAnim: Animator? = null
 
+    fun <VH: IDragTagViewHolder> setLayoutAdapter(adapter: IDragTagAdapter<*, VH>) {
+        dragTagAdapter = adapter
+        adapter.dataUpdate = ::updateData
+
+        repeat(adapter.getItemCount()) {
+            createViewLast(adapter, it)
+        }
+    }
+    private fun <VH: IDragTagViewHolder> createViewLast(adapter: IDragTagAdapter<*, VH>, index: Int) {
+        val viewHolder = adapter.onCreateViewHolder(this)
+        viewHolders.add(viewHolder)
+        adapter.onBindViewHolder(viewHolder, index)
+        val view = viewHolder.itemView
+        if (view is DragView) view.setLayoutController(this)
+        addView(view)
+    }
+
+    // 目前该方法仅支持单一数据删除或者尾部增加，其他情况可能会出现不可预计的错误
+    private fun updateData() {
+        val adapter = dragTagAdapter ?: return
+        if (adapter.getItemCount() == viewHolders.size) return
+
+        var oldIndex = 0
+        var newIndex = 0
+        while (oldIndex < viewHolders.size || newIndex < adapter.getItemCount()) {
+            if (oldIndex >= viewHolders.size) {
+                createViewLast(adapter, oldIndex)
+                return
+            }
+            if (viewHolders[oldIndex].label != adapter.getItemLabel(newIndex)) {
+                removeView(viewHolders[oldIndex].itemView)
+                viewHolders.removeAt(oldIndex)
+            }
+            oldIndex++
+            newIndex++
+        }
+    }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         if (draggingView != null) return
@@ -73,8 +118,8 @@ class DragFlowLayout @JvmOverloads constructor(
         // 移动动画过程中不探测
         if (moveAnim?.isRunning == true) return
 
-        val tx = x.coerceAtLeast(0)
-        val ty = y.coerceAtLeast(0)
+        val tx = (x - left).coerceAtLeast(0)
+        val ty = (y - top).coerceAtLeast(0)
         val cCount = childCount
         for (i in 0 until cCount) {
             val child = getChildAt(i)

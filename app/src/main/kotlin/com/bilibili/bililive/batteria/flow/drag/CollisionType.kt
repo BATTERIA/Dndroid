@@ -1,4 +1,4 @@
-package com.bilibili.bililive.batteria.flow
+package com.bilibili.bililive.batteria.flow.drag
 
 /**
  * @author: yaobeihaoyu

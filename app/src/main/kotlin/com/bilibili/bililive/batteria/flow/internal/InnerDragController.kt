@@ -1,6 +1,8 @@
-package com.bilibili.bililive.batteria.flow
+package com.bilibili.bililive.batteria.flow.internal
 
 import android.view.View
+import com.bilibili.bililive.batteria.flow.drag.DragView
+import com.bilibili.bililive.batteria.flow.model.Size
 
 /**
  * @author: yaobeihaoyu
@@ -8,7 +10,7 @@ import android.view.View
  * @since: 2021/12/6
  * @description:
  */
-interface DragLayoutController {
+interface InnerDragController {
     fun generateStub(view: View, size: Size)
 
     fun replaceStub(view: View, onFinish: () -> Unit)

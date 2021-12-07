@@ -64,33 +64,10 @@ class MainActivity : AppCompatActivity() {
         }, Item("AnimationTest", R.drawable.animation) {
             startActivity(Intent(this, AnimationTestActivity::class.java))
         }, Item("Touch", R.drawable.ic_more_cache) {
-            runBlocking {
-                delay(123)
-                val scope = coroutineScope {
-                    launch {
-
-                    }
-                }
-                scope.cancel()
-            }
-            lifecycleScope.launch {
-                Log.e("test-D", "test ${Thread.currentThread().name}")
-                coroutineScope {
-                    launch {
-
-                    }
-                }
-            }
-            MainScope().launch {
-                Log.e("test-D", "test ${Thread.currentThread().name}")
-                withContext(NonCancellable) {
-
-                }
-
-                GlobalScope.launch(CoroutineExceptionHandler { coroutineContext, throwable ->  }) {
-
-                }
-            }
+            val clazz = Class.forName("com.bilibili.bililive.mylibrary.TestClass")
+            val constructor = clazz.getDeclaredConstructor(String::class.java)
+//            constructor.isAccessible = true
+            constructor.newInstance("DTEST sb")
         }))
         recyclerView.adapter = adapter
 

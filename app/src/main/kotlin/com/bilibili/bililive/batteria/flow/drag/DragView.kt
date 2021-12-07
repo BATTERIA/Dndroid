@@ -1,10 +1,12 @@
-package com.bilibili.bililive.batteria.flow
+package com.bilibili.bililive.batteria.flow.drag
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
+import com.bilibili.bililive.batteria.flow.internal.InnerDragController
+import com.bilibili.bililive.batteria.flow.model.Size
 import com.bilibili.bililive.batteria.util.HandlerThreads
 import com.bilibili.bililive.batteria.util.LiveLogger
 import com.bilibili.bililive.batteria.util.VibratorUtil
@@ -20,18 +22,20 @@ class DragView @JvmOverloads constructor(
     attributeSet: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attributeSet, defStyleAttr), LiveLogger {
-    private var dragLayoutController: DragLayoutController? = null
+    private var innerDragLayoutController: InnerDragController? = null
+    private val dragLayoutController: InnerDragController?
+        get() = innerDragLayoutController ?: parent as? InnerDragController
 
     // 是否处于拖拽中
     var isDragging = false
+
+    private var vibrateEnable: Boolean = true
+    private var vibrateDuration: Long = 100
 
     private var lastX = 0
     private var lastY = 0
     private var beginX = 0
     private var beginY = 0
-
-    private var vibrateEnable: Boolean = true
-    private var vibrateDuration: Long = 100
 
     private val longTouchRunnable = Runnable {
         isDragging = true
@@ -44,11 +48,11 @@ class DragView @JvmOverloads constructor(
     }
 
     init {
-        dragLayoutController = parent as DragLayoutController
+        isClickable = true
     }
 
-    fun setLayoutController(controller: DragLayoutController) {
-        dragLayoutController = controller
+    fun setLayoutController(controller: InnerDragController) {
+        innerDragLayoutController = controller
     }
 
     @SuppressLint("ClickableViewAccessibility")

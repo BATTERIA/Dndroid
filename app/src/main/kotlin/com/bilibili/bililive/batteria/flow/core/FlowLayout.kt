@@ -1,18 +1,13 @@
-package com.bilibili.bililive.batteria.flow
+package com.bilibili.bililive.batteria.flow.core
 
-import android.animation.Animator
-import android.animation.AnimatorSet
-import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.util.LayoutDirection
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Space
 import androidx.core.text.TextUtilsCompat
 import com.bilibili.bililive.batteria.R
-import kotlinx.android.synthetic.main.activity_animation_test.view.*
-import org.jetbrains.anko.doAsync
+import com.bilibili.bililive.batteria.flow.model.Location
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.max

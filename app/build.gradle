@@ -111,6 +111,8 @@ dependencies {
 //    implementation 'com.github.ctiao:DanmakuFlameMaster:0.9.25'
 
 //    implementation "com.google.protobuf:protobuf-lite:$protobufLite"
+
+    implementation project(":mylibrary")
 }
 
 //protobuf {

@@ -1,138 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
+    android:padding="50dp"
     tools:context=".flow.FlowActivity">
 
-    <com.bilibili.bililive.batteria.flow.DragFlowLayout
+    <com.bilibili.bililive.batteria.flow.drag.DragFlowLayout
+        android:id="@+id/dfl"
+        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="300dp" />
 
-        <com.bilibili.bililive.batteria.flow.DragView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp">
+    <!--    <com.bilibili.bililive.batteria.flow.drag.DragFlowLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_border"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
-                android:text="test"
-                android:textSize="20sp" />
+    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:padding="5dp">-->
 
-        </com.bilibili.bililive.batteria.flow.DragView>
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:background="@drawable/text_border"-->
+    <!--                android:paddingHorizontal="20dp"-->
+    <!--                android:paddingVertical="10dp"-->
+    <!--                android:text="test"-->
+    <!--                android:textSize="20sp" />-->
 
-        <com.bilibili.bililive.batteria.flow.DragView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp">
+    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_border"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
-                android:text="test"
-                android:textSize="20sp" />
-        </com.bilibili.bililive.batteria.flow.DragView>
+    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:padding="5dp">-->
 
-        <com.bilibili.bililive.batteria.flow.DragView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp">
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:background="@drawable/text_border"-->
+    <!--                android:paddingHorizontal="20dp"-->
+    <!--                android:paddingVertical="10dp"-->
+    <!--                android:text="test"-->
+    <!--                android:textSize="20sp" />-->
+    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_border"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
-                android:text="test12"
-                android:textSize="20sp" />
-        </com.bilibili.bililive.batteria.flow.DragView>
+    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:padding="5dp">-->
+
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:background="@drawable/text_border"-->
+    <!--                android:paddingHorizontal="20dp"-->
+    <!--                android:paddingVertical="10dp"-->
+    <!--                android:text="test12"-->
+    <!--                android:textSize="20sp" />-->
+    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
 
 
-        <com.bilibili.bililive.batteria.flow.DragView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp">
+    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:padding="5dp">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_border"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
-                android:text="Hello1234"
-                android:textSize="20sp" />
-        </com.bilibili.bililive.batteria.flow.DragView>
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:background="@drawable/text_border"-->
+    <!--                android:paddingHorizontal="20dp"-->
+    <!--                android:paddingVertical="10dp"-->
+    <!--                android:text="Hello1234"-->
+    <!--                android:textSize="20sp" />-->
+    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
 
-        <com.bilibili.bililive.batteria.flow.DragView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp">
+    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:padding="5dp">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_border"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
-                android:text="test1"
-                android:textSize="20sp" />
-        </com.bilibili.bililive.batteria.flow.DragView>
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:background="@drawable/text_border"-->
+    <!--                android:paddingHorizontal="20dp"-->
+    <!--                android:paddingVertical="10dp"-->
+    <!--                android:text="test1"-->
+    <!--                android:textSize="20sp" />-->
+    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
 
-        <com.bilibili.bililive.batteria.flow.DragView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp">
+    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:padding="5dp">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_border"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
-                android:text="test"
-                android:textSize="20sp" />
-        </com.bilibili.bililive.batteria.flow.DragView>
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:background="@drawable/text_border"-->
+    <!--                android:paddingHorizontal="20dp"-->
+    <!--                android:paddingVertical="10dp"-->
+    <!--                android:text="test"-->
+    <!--                android:textSize="20sp" />-->
+    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
 
-        <com.bilibili.bililive.batteria.flow.DragView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp">
+    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:padding="5dp">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_border"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
-                android:text="testtesttest"
-                android:textSize="20sp" />
-        </com.bilibili.bililive.batteria.flow.DragView>
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:background="@drawable/text_border"-->
+    <!--                android:paddingHorizontal="20dp"-->
+    <!--                android:paddingVertical="10dp"-->
+    <!--                android:text="testtesttest"-->
+    <!--                android:textSize="20sp" />-->
+    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
 
-        <com.bilibili.bililive.batteria.flow.DragView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp">
+    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:padding="5dp">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_border"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
-                android:text="test"
-                android:textSize="20sp" />
-        </com.bilibili.bililive.batteria.flow.DragView>
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:background="@drawable/text_border"-->
+    <!--                android:paddingHorizontal="20dp"-->
+    <!--                android:paddingVertical="10dp"-->
+    <!--                android:text="test"-->
+    <!--                android:textSize="20sp" />-->
+    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
 
-    </com.bilibili.bililive.batteria.flow.DragFlowLayout>
+    <!--    </com.bilibili.bililive.batteria.flow.drag.DragFlowLayout>-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
