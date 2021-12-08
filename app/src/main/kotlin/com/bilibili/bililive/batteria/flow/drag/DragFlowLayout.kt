@@ -14,6 +14,7 @@ import com.bilibili.bililive.batteria.flow.config.ConfigReader
 import com.bilibili.bililive.batteria.flow.internal.InternalDragController
 import com.bilibili.bililive.batteria.flow.model.Location
 import com.bilibili.bililive.batteria.flow.model.Size
+import com.bilibili.bililive.batteria.flow.text.DragTagState
 import java.util.*
 
 /**
@@ -26,7 +27,7 @@ class DragFlowLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-) : FlowLayout(context, attrs, defStyle), InternalDragController {
+) : FlowLayout(context, attrs, defStyle), InternalDragController, DataSynchronizer {
     private var dragTagAdapter: IDragTagAdapter<*, *>? = null
     private var viewHolders = mutableListOf<IDragTagViewHolder>()
 
@@ -108,7 +109,6 @@ class DragFlowLayout @JvmOverloads constructor(
 
     fun <VH : IDragTagViewHolder> setLayoutAdapter(adapter: IDragTagAdapter<*, VH>): DragFlowLayout {
         dragTagAdapter = adapter
-        adapter.dataUpdate = ::updateData
 
         repeat(adapter.getItemCount()) {
             createViewLast(adapter, it)
@@ -132,7 +132,7 @@ class DragFlowLayout @JvmOverloads constructor(
     }
 
     // 目前该方法仅支持单一数据删除或者尾部增加，其他情况可能会出现不可预计的错误
-    private fun updateData() {
+    override fun updateData() {
         val adapter = dragTagAdapter ?: return
         if (adapter.getItemCount() == viewHolders.size) return
 
@@ -149,6 +149,13 @@ class DragFlowLayout @JvmOverloads constructor(
             }
             oldIndex++
             newIndex++
+        }
+    }
+
+    override fun setEditable(isEditable: Boolean) {
+        viewHolders.forEach {
+            val editableState = if (it.isEditable) DragTagState.EDITABLE else DragTagState.UNEDITABLE
+            it.turnTo(if (isEditable) editableState else DragTagState.DEFAULT)
         }
     }
 
@@ -181,9 +188,13 @@ class DragFlowLayout @JvmOverloads constructor(
     override fun setDraggingView(view: View) {
         draggingView = view
         stubGoalLoc = Location(view.left, view.top, view.right, view.bottom)
+        // todo
+//        viewHolders.
+//        dragTagAdapter?.notifyItemDragStart(indexOfChild(view))
     }
 
     override fun removeDraggingView() {
+//        dragTagAdapter?.notifyItemDragFinish(indexOfChild(draggingView))
         draggingView = null
     }
 
@@ -194,10 +205,13 @@ class DragFlowLayout @JvmOverloads constructor(
         // 移动动画过程中不探测
         if (moveAnim?.isRunning == true) return
 
-        val array = IntArray(2)
-        getLocationOnScreen(array)
+        // 使用视图中心检测
 //        val tx = (view.left + (view.right - view.left) / 2).coerceAtLeast(0)
 //        val ty = (view.top + (view.bottom - view.top) / 2).coerceAtLeast(0)
+
+        // 使用触摸位置检测
+        val array = IntArray(2)
+        getLocationOnScreen(array)
         val tx = (rawX - array[0]).coerceAtLeast(0)
         val ty = (rawY - array[1]).coerceAtLeast(0)
 
@@ -225,7 +239,7 @@ class DragFlowLayout @JvmOverloads constructor(
             val dragIndex = indexOfChild(draggingView)
             val from = if (dragIndex <= stubIndex) stubIndex - 1 else stubIndex
             val to = if (dragIndex <= target) target - 1 else target
-            dragTagAdapter?.notifyItemMoved(from, to)
+            itemMoved(from, to)
 
             // 调整stub在children中的位置
             moveStubOrder(target, view)
@@ -247,7 +261,7 @@ class DragFlowLayout @JvmOverloads constructor(
      * 过滤不可见和拖拽视图
      */
     override fun filterView(view: View): Boolean = view.visibility == View.GONE
-        || (view is DragView && view.isDragging)
+        || (view is DragView && view.isDragging) || !view.isEnabled
 
     /**
      * 自定义配置绘制顺序
@@ -364,6 +378,13 @@ class DragFlowLayout @JvmOverloads constructor(
 
         lAnim.addListener(getAnimatorListener(block))
         lAnim.start()
+    }
+
+    private fun itemMoved(from: Int, to: Int) {
+        dragTagAdapter?.notifyItemMoved(from, to)
+        if (from == to || from !in 0 until viewHolders.size || to !in 0 until viewHolders.size) return
+        val t = viewHolders.removeAt(from)
+        viewHolders.add(if (from < to) to - 1 else to, t)
     }
 
     private fun removeStub() {

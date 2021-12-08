@@ -1,6 +1,7 @@
 package com.bilibili.bililive.batteria.flow.drag
 
 import android.view.ViewGroup
+import com.bilibili.bililive.batteria.flow.text.DragTagState
 
 /**
  * @author: yaobeihaoyu
@@ -10,7 +11,7 @@ import android.view.ViewGroup
  */
 interface IDragTagAdapter<T, VH: IDragTagViewHolder> {
     // todo 待优化，需要调整内部逻辑
-    var dataUpdate: DataUpdate?
+    fun setDataSynchronizer(synchronizer: DataSynchronizer)
 
     fun initData(list: List<T>)
 
@@ -22,6 +23,8 @@ interface IDragTagAdapter<T, VH: IDragTagViewHolder> {
 
     fun notifyItemMoved(from: Int, to: Int)
 
+    fun setEditable(editable: Boolean)
+
     fun getItemViewType(index: Int): Int
 
     fun getItemCount(): Int
@@ -30,5 +33,3 @@ interface IDragTagAdapter<T, VH: IDragTagViewHolder> {
 
     fun onCreateViewHolder(parent: ViewGroup, itemView: Int): VH
 }
-
-typealias DataUpdate = () -> Unit

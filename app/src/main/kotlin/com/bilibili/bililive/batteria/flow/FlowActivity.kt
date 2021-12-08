@@ -6,6 +6,7 @@ import android.view.Window
 import android.view.WindowManager
 import com.bilibili.bililive.batteria.R
 import com.bilibili.bililive.batteria.flow.drag.DragFlowLayout
+import com.bilibili.bililive.batteria.flow.model.TagItem
 import com.bilibili.bililive.batteria.flow.text.TextDragAdapter
 
 class FlowActivity : AppCompatActivity() {
@@ -16,29 +17,29 @@ class FlowActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_flow)
 
+        val list = listOf(
+            "testtest",
+            "test",
+            "testtest",
+            "test",
+            "testtesttesttest",
+            "testtesttest",
+            "test",
+            "test",
+            "testtest",
+            "test",
+            "testtesttest",
+            "test",
+            "testtest",
+            "testtesttesttest",
+            "test",
+            "testtest"
+        )
+        val t = mutableListOf(TagItem("test", false))
+        t.addAll(list.map { TagItem(it) })
         val dfl = findViewById<DragFlowLayout>(R.id.dfl)
         val adapter = TextDragAdapter()
-        adapter.initData(
-            listOf(
-                "test",
-                "testtest",
-                "test",
-                "testtest",
-                "test",
-                "testtesttesttest",
-                "testtesttest",
-                "test",
-                "test",
-                "testtest",
-                "test",
-                "testtesttest",
-                "test",
-                "testtest",
-                "testtesttesttest",
-                "test",
-                "testtest"
-            )
-        )
+        adapter.initData(t)
         dfl.setLayoutAdapter(adapter)
 
     }

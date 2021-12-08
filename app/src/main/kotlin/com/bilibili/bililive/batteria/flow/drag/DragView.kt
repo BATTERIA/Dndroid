@@ -24,14 +24,17 @@ class DragView @JvmOverloads constructor(
     attributeSet: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attributeSet, defStyleAttr), LiveLogger {
+
+    // 是否处于拖拽中
+    var isDragging = false
+
+    var filterTouch = false
+
     private var internalDragLayoutController: InternalDragController? = null
     private val dragLayoutController: InternalDragController?
         get() = internalDragLayoutController ?: parent as? InternalDragController
 
     private var configReader: ConfigReader = DefaultConfigReader()
-
-    // 是否处于拖拽中
-    var isDragging = false
 
     private var lastX = 0
     private var lastY = 0
@@ -64,6 +67,8 @@ class DragView @JvmOverloads constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (filterTouch) return true
+
         val rawX = event.rawX.toInt()
         val rawY = event.rawY.toInt()
         when (event.action) {
@@ -73,7 +78,7 @@ class DragView @JvmOverloads constructor(
 
                 cancelLongPressJob()
                 longPressJob = coroutineScope?.launch {
-                    delay(500)
+                    delay(PRESS_TIME)
                     longPressAction()
                 }
 
@@ -102,7 +107,10 @@ class DragView @JvmOverloads constructor(
             MotionEvent.ACTION_UP -> {
                 cancelLongPressJob()
 
-                if (!isDragging) return false
+                if (!isDragging) {
+                    performClick()
+                    return false
+                }
 
                 // 落地
                 dragLayoutController?.replaceStub(this) {
@@ -138,5 +146,6 @@ class DragView @JvmOverloads constructor(
 
     companion object {
         private const val TAG = "DragContainerView"
+        private const val PRESS_TIME = 300L
     }
 }

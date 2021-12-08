@@ -1,6 +1,7 @@
 package com.bilibili.bililive.batteria.flow.drag
 
 import android.view.View
+import com.bilibili.bililive.batteria.flow.text.DragTagState
 
 /**
  * @author: yaobeihaoyu
@@ -11,4 +12,7 @@ import android.view.View
 interface IDragTagViewHolder {
     var label: Int
     val itemView: View
+    var isEditable: Boolean
+
+    fun turnTo(state: DragTagState)
 }
