@@ -5,11 +5,12 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
-import com.bilibili.bililive.batteria.flow.internal.InnerDragController
+import com.bilibili.bililive.batteria.flow.internal.InternalDragController
 import com.bilibili.bililive.batteria.flow.model.Size
 import com.bilibili.bililive.batteria.util.HandlerThreads
 import com.bilibili.bililive.batteria.util.LiveLogger
 import com.bilibili.bililive.batteria.util.VibratorUtil
+import kotlinx.coroutines.*
 
 /**
  * @author: yaobeihaoyu
@@ -22,9 +23,9 @@ class DragView @JvmOverloads constructor(
     attributeSet: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attributeSet, defStyleAttr), LiveLogger {
-    private var innerDragLayoutController: InnerDragController? = null
-    private val dragLayoutController: InnerDragController?
-        get() = innerDragLayoutController ?: parent as? InnerDragController
+    private var internalDragLayoutController: InternalDragController? = null
+    private val dragLayoutController: InternalDragController?
+        get() = internalDragLayoutController ?: parent as? InternalDragController
 
     // 是否处于拖拽中
     var isDragging = false
@@ -37,7 +38,9 @@ class DragView @JvmOverloads constructor(
     private var beginX = 0
     private var beginY = 0
 
-    private val longTouchRunnable = Runnable {
+    private var coroutineScope: CoroutineScope? = null
+    private var longPressJob: Job? = null
+    private val longPressAction = {
         isDragging = true
 
         // 震动
@@ -51,8 +54,8 @@ class DragView @JvmOverloads constructor(
         isClickable = true
     }
 
-    fun setLayoutController(controller: InnerDragController) {
-        innerDragLayoutController = controller
+    fun setLayoutController(controller: InternalDragController) {
+        internalDragLayoutController = controller
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -64,8 +67,11 @@ class DragView @JvmOverloads constructor(
                 isDragging = false
                 dragLayoutController?.removeDraggingView()
 
-                // todo 延时使用协程
-                HandlerThreads.postDelayed(HandlerThreads.THREAD_UI, longTouchRunnable, 500)
+                cancelLongPressJob()
+                longPressJob = coroutineScope?.launch {
+                    delay(500)
+                    longPressAction()
+                }
 
                 lastX = rawX
                 lastY = rawY
@@ -75,7 +81,7 @@ class DragView @JvmOverloads constructor(
             MotionEvent.ACTION_MOVE -> {
                 if (!isDragging) return false
 
-                dragLayoutController?.detectViewCollision(this, rawX, rawY)
+                dragLayoutController?.detectViewCollision(this)
 
                 val dx = rawX - lastX
                 val dy = rawY - lastY
@@ -90,7 +96,7 @@ class DragView @JvmOverloads constructor(
                 lastY = rawY
             }
             MotionEvent.ACTION_UP -> {
-                HandlerThreads.remove(HandlerThreads.THREAD_UI, longTouchRunnable)
+                cancelLongPressJob()
 
                 if (!isDragging) return false
 
@@ -106,9 +112,21 @@ class DragView @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        coroutineScope = MainScope()
+    }
+
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        HandlerThreads.remove(HandlerThreads.THREAD_UI, longTouchRunnable)
+        cancelLongPressJob()
+        coroutineScope?.cancel()
+        coroutineScope = null
+    }
+
+    private fun cancelLongPressJob() {
+        longPressJob?.cancel()
+        longPressJob = null
     }
 
     override val logTag: String

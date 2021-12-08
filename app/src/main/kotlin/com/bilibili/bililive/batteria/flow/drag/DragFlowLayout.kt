@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.Space
 import com.bilibili.bililive.batteria.flow.*
 import com.bilibili.bililive.batteria.flow.core.FlowLayout
-import com.bilibili.bililive.batteria.flow.internal.InnerDragController
+import com.bilibili.bililive.batteria.flow.internal.InternalDragController
 import com.bilibili.bililive.batteria.flow.model.Location
 import com.bilibili.bililive.batteria.flow.model.Size
 import java.util.*
@@ -23,7 +23,7 @@ class DragFlowLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-) : FlowLayout(context, attrs, defStyle), InnerDragController {
+) : FlowLayout(context, attrs, defStyle), InternalDragController {
     private var dragTagAdapter: IDragTagAdapter<*, *>? = null
     private var viewHolders = mutableListOf<IDragTagViewHolder>()
 
@@ -90,10 +90,16 @@ class DragFlowLayout @JvmOverloads constructor(
         super.onLayout(changed, l, t, r, b)
     }
 
+    /**
+     * 生成占位视图
+     */
     override fun generateStub(view: View, size: Size) {
         doGenerateStub(indexOfChild(view), size)
     }
 
+    /**
+     * 拖拽视图移动至占位视图处，并移除占位视图
+     */
     override fun replaceStub(view: View, onFinish: () -> Unit) {
         val loc = stubGoalLoc ?: stubView?.run { Location(left, top, right, bottom) } ?: return
 
@@ -114,12 +120,15 @@ class DragFlowLayout @JvmOverloads constructor(
         draggingView = null
     }
 
-    override fun detectViewCollision(view: DragView, x: Int, y: Int) {
+    /**
+     * 探测是否需要调整children排序
+     */
+    override fun detectViewCollision(view: DragView) {
         // 移动动画过程中不探测
         if (moveAnim?.isRunning == true) return
 
-        val tx = (x - left).coerceAtLeast(0)
-        val ty = (y - top).coerceAtLeast(0)
+        val tx = (view.left + (view.right - view.left) / 2).coerceAtLeast(0)
+        val ty = (view.top + (view.bottom - view.top) / 2).coerceAtLeast(0)
         val cCount = childCount
         for (i in 0 until cCount) {
             val child = getChildAt(i)

@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="50dp"
+    android:padding="20dp"
     tools:context=".flow.FlowActivity">
 
     <com.bilibili.bililive.batteria.flow.drag.DragFlowLayout
         android:id="@+id/dfl"
         android:layout_marginTop="50dp"
         android:layout_width="match_parent"
-        android:layout_height="300dp" />
+        android:layout_height="match_parent" />
 
     <!--    <com.bilibili.bililive.batteria.flow.drag.DragFlowLayout-->
     <!--        android:layout_width="match_parent"-->

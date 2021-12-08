@@ -10,7 +10,7 @@ import com.bilibili.bililive.batteria.flow.model.Size
  * @since: 2021/12/6
  * @description:
  */
-interface InnerDragController {
+interface InternalDragController {
     fun generateStub(view: View, size: Size)
 
     fun replaceStub(view: View, onFinish: () -> Unit)
@@ -19,5 +19,5 @@ interface InnerDragController {
 
     fun removeDraggingView()
 
-    fun detectViewCollision(view: DragView, x: Int, y: Int)
+    fun detectViewCollision(view: DragView)
 }
