@@ -5,9 +5,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
+import com.bilibili.bililive.batteria.flow.config.ConfigReader
+import com.bilibili.bililive.batteria.flow.config.DefaultConfigReader
 import com.bilibili.bililive.batteria.flow.internal.InternalDragController
 import com.bilibili.bililive.batteria.flow.model.Size
-import com.bilibili.bililive.batteria.util.HandlerThreads
 import com.bilibili.bililive.batteria.util.LiveLogger
 import com.bilibili.bililive.batteria.util.VibratorUtil
 import kotlinx.coroutines.*
@@ -27,11 +28,10 @@ class DragView @JvmOverloads constructor(
     private val dragLayoutController: InternalDragController?
         get() = internalDragLayoutController ?: parent as? InternalDragController
 
+    private var configReader: ConfigReader = DefaultConfigReader()
+
     // 是否处于拖拽中
     var isDragging = false
-
-    private var vibrateEnable: Boolean = true
-    private var vibrateDuration: Long = 100
 
     private var lastX = 0
     private var lastY = 0
@@ -44,7 +44,7 @@ class DragView @JvmOverloads constructor(
         isDragging = true
 
         // 震动
-        if (vibrateEnable) VibratorUtil.vibrate(vibrateDuration)
+        if (configReader.vibrateEnable()) VibratorUtil.vibrate(configReader.vibrateDuration())
 
         dragLayoutController?.generateStub(this, Size(width, height))
         dragLayoutController?.setDraggingView(this)
@@ -52,6 +52,10 @@ class DragView @JvmOverloads constructor(
 
     init {
         isClickable = true
+    }
+
+    fun setConfigReader(reader: ConfigReader) {
+        configReader = reader
     }
 
     fun setLayoutController(controller: InternalDragController) {
@@ -81,7 +85,7 @@ class DragView @JvmOverloads constructor(
             MotionEvent.ACTION_MOVE -> {
                 if (!isDragging) return false
 
-                dragLayoutController?.detectViewCollision(this)
+                dragLayoutController?.detectViewCollision(this, rawX, rawY)
 
                 val dx = rawX - lastX
                 val dy = rawY - lastY

@@ -31,8 +31,8 @@ open class FlowLayout @JvmOverloads constructor(
 
     init {
         isMotionEventSplittingEnabled = false
-        val ta = context.obtainStyledAttributes(attrs, R.styleable.TagFlowLayout)
-        mGravity = ta.getInt(R.styleable.TagFlowLayout_tag_gravity, LEFT)
+        val attributes = context.obtainStyledAttributes(attrs, R.styleable.FlowLayout)
+        mGravity = attributes.getInt(R.styleable.FlowLayout_tag_gravity, LEFT)
         val layoutDirection: Int = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault())
         if (layoutDirection == LayoutDirection.RTL) {
             mGravity = if (mGravity == LEFT) {
@@ -41,7 +41,7 @@ open class FlowLayout @JvmOverloads constructor(
                 LEFT
             }
         }
-        ta.recycle()
+        attributes.recycle()
     }
 
     override fun generateLayoutParams(attrs: AttributeSet): LayoutParams {

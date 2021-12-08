@@ -19,5 +19,5 @@ interface InternalDragController {
 
     fun removeDraggingView()
 
-    fun detectViewCollision(view: DragView)
+    fun detectViewCollision(view: DragView, rawX: Int, rawY: Int)
 }

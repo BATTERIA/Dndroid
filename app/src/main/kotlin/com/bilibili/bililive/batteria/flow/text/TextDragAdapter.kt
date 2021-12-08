@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import com.bilibili.bililive.batteria.R
 import com.bilibili.bililive.batteria.flow.drag.DataUpdate
 import com.bilibili.bililive.batteria.flow.drag.IDragTagAdapter
-import com.bilibili.bililive.batteria.flow.drag.IDragTagViewHolder
 
 /**
  * @author: yaobeihaoyu
@@ -18,6 +17,8 @@ class TextDragAdapter : IDragTagAdapter<String, TextDragViewHolder> {
     private var defaultClickListener: ((String) -> Unit)? = null
 
     override var dataUpdate: DataUpdate? = null
+
+    fun getData(): List<String> = dataList
 
     fun setDefaultClickListener(clickListener: (String) -> Unit) {
         defaultClickListener = clickListener
@@ -54,7 +55,18 @@ class TextDragAdapter : IDragTagAdapter<String, TextDragViewHolder> {
         viewHolder.content.text = dataList[position]
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup): TextDragViewHolder = TextDragViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.view_item_text, parent, false)
-    )
+    override fun onCreateViewHolder(parent: ViewGroup, itemView: Int): TextDragViewHolder =
+        TextDragViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.view_item_text, parent, false)
+        )
+
+    override fun notifyItemMoved(from: Int, to: Int) {
+        if (from == to || from !in 0 until dataList.size || to !in 0 until dataList.size) return
+        val t = dataList.removeAt(from)
+        dataList.add(if (from < to) to - 1 else to, t)
+    }
+
+    override fun getItemViewType(index: Int): Int {
+        return -1
+    }
 }

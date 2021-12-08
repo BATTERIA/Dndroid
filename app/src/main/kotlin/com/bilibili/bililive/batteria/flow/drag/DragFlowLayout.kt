@@ -6,8 +6,11 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Space
+import com.bilibili.bililive.batteria.R
 import com.bilibili.bililive.batteria.flow.*
 import com.bilibili.bililive.batteria.flow.core.FlowLayout
+import com.bilibili.bililive.batteria.flow.config.Config
+import com.bilibili.bililive.batteria.flow.config.ConfigReader
 import com.bilibili.bililive.batteria.flow.internal.InternalDragController
 import com.bilibili.bililive.batteria.flow.model.Location
 import com.bilibili.bililive.batteria.flow.model.Size
@@ -26,6 +29,11 @@ class DragFlowLayout @JvmOverloads constructor(
 ) : FlowLayout(context, attrs, defStyle), InternalDragController {
     private var dragTagAdapter: IDragTagAdapter<*, *>? = null
     private var viewHolders = mutableListOf<IDragTagViewHolder>()
+
+    /**
+     * 内部配置
+     */
+    private var config: Config = Config.default()
 
     /**
      * 拖拽时的占位视图
@@ -47,20 +55,79 @@ class DragFlowLayout @JvmOverloads constructor(
     // 拖拽View移动到占位View动画
     private var replaceStubAnim: Animator? = null
 
-    fun <VH: IDragTagViewHolder> setLayoutAdapter(adapter: IDragTagAdapter<*, VH>) {
+    val configReader = object : ConfigReader {
+        override fun moveAnimDuration(): Int = config.moveAnimDuration
+
+        override fun resumeAnimDuration(): Int = config.resumeAnimDuration
+
+        override fun vibrateEnable(): Boolean = config.vibrateEnable
+
+        override fun vibrateDuration(): Long = config.vibrateDuration
+    }
+
+    init {
+        val attributes = context.obtainStyledAttributes(attrs, R.styleable.DragFlowLayout)
+        config.moveAnimDuration = attributes.getInt(
+            R.styleable.DragFlowLayout_move_anim_duration,
+            Config.DEFAULT_MOVE_ANIM_DURATION
+        )
+        config.resumeAnimDuration = attributes.getInt(
+            R.styleable.DragFlowLayout_resume_anim_duration,
+            Config.DEFAULT_RESUME_ANIM_DURATION
+        )
+        config.vibrateEnable = attributes.getBoolean(
+            R.styleable.DragFlowLayout_vibrate_enable,
+            Config.DEFAULT_VIBRATE_ENABLE
+        )
+        config.vibrateDuration = attributes.getInteger(
+            R.styleable.DragFlowLayout_vibrate_duration,
+            Config.DEFAULT_VIBRATE_DURATION.toInt()
+        ).toLong()
+        attributes.recycle()
+    }
+
+    fun setMoveAnimDuration(duration: Int): DragFlowLayout {
+        config.moveAnimDuration = duration
+        return this
+    }
+
+    fun setResumeAnimDuration(duration: Int): DragFlowLayout {
+        config.resumeAnimDuration = duration
+        return this
+    }
+
+    fun setVibrateEnable(enable: Boolean): DragFlowLayout {
+        config.vibrateEnable = enable
+        return this
+    }
+
+    fun setVibrateDuration(duration: Long): DragFlowLayout {
+        config.vibrateDuration = duration
+        return this
+    }
+
+    fun <VH : IDragTagViewHolder> setLayoutAdapter(adapter: IDragTagAdapter<*, VH>): DragFlowLayout {
         dragTagAdapter = adapter
         adapter.dataUpdate = ::updateData
 
         repeat(adapter.getItemCount()) {
             createViewLast(adapter, it)
         }
+        return this
     }
-    private fun <VH: IDragTagViewHolder> createViewLast(adapter: IDragTagAdapter<*, VH>, index: Int) {
-        val viewHolder = adapter.onCreateViewHolder(this)
+
+    private fun <VH : IDragTagViewHolder> createViewLast(
+        adapter: IDragTagAdapter<*, VH>,
+        index: Int
+    ) {
+        val viewHolder = adapter.onCreateViewHolder(this, adapter.getItemViewType(index))
         viewHolders.add(viewHolder)
         adapter.onBindViewHolder(viewHolder, index)
         val view = viewHolder.itemView
-        if (view is DragView) view.setLayoutController(this)
+        if (view is DragView) {
+            view.setLayoutController(this)
+            view.setConfigReader(configReader)
+        }
         addView(view)
     }
 
@@ -123,12 +190,17 @@ class DragFlowLayout @JvmOverloads constructor(
     /**
      * 探测是否需要调整children排序
      */
-    override fun detectViewCollision(view: DragView) {
+    override fun detectViewCollision(view: DragView, rawX: Int, rawY: Int) {
         // 移动动画过程中不探测
         if (moveAnim?.isRunning == true) return
 
-        val tx = (view.left + (view.right - view.left) / 2).coerceAtLeast(0)
-        val ty = (view.top + (view.bottom - view.top) / 2).coerceAtLeast(0)
+        val array = IntArray(2)
+        getLocationOnScreen(array)
+//        val tx = (view.left + (view.right - view.left) / 2).coerceAtLeast(0)
+//        val ty = (view.top + (view.bottom - view.top) / 2).coerceAtLeast(0)
+        val tx = (rawX - array[0]).coerceAtLeast(0)
+        val ty = (rawY - array[1]).coerceAtLeast(0)
+
         val cCount = childCount
         for (i in 0 until cCount) {
             val child = getChildAt(i)
@@ -148,6 +220,12 @@ class DragFlowLayout @JvmOverloads constructor(
 
             // 目标点和当前一致时不进行移动
             if (target == stubIndex) return
+
+            // 通知adapter数据更新
+            val dragIndex = indexOfChild(draggingView)
+            val from = if (dragIndex <= stubIndex) stubIndex - 1 else stubIndex
+            val to = if (dragIndex <= target) target - 1 else target
+            dragTagAdapter?.notifyItemMoved(from, to)
 
             // 调整stub在children中的位置
             moveStubOrder(target, view)
@@ -193,7 +271,7 @@ class DragFlowLayout @JvmOverloads constructor(
         if (moveAnim?.isRunning == true) return
 
         val anim = ValueAnimator.ofFloat(1f)
-        anim?.duration = 300
+        anim?.duration = config.moveAnimDuration.toLong()
         anim?.addUpdateListener { animator ->
             val scale = animator.animatedValue as? Float ?: return@addUpdateListener
             var locIndex = 0
@@ -274,7 +352,7 @@ class DragFlowLayout @JvmOverloads constructor(
      */
     private fun animateToStub(view: View, loc: Location, block: () -> Unit) {
         val lAnim = ValueAnimator.ofFloat(1f)
-        lAnim?.duration = 300
+        lAnim?.duration = config.resumeAnimDuration.toLong()
         lAnim?.addUpdateListener { animator ->
             val scale = animator.animatedValue as? Float ?: return@addUpdateListener
             val l = getCurrentData(view.left, loc.l, scale)

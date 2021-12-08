@@ -9,6 +9,7 @@ import android.view.ViewGroup
  * @description:
  */
 interface IDragTagAdapter<T, VH: IDragTagViewHolder> {
+    // todo 待优化，需要调整内部逻辑
     var dataUpdate: DataUpdate?
 
     fun initData(list: List<T>)
@@ -19,11 +20,15 @@ interface IDragTagAdapter<T, VH: IDragTagViewHolder> {
 
     fun getItemLabel(index: Int): Int
 
+    fun notifyItemMoved(from: Int, to: Int)
+
+    fun getItemViewType(index: Int): Int
+
     fun getItemCount(): Int
 
     fun onBindViewHolder(viewHolder: VH, position: Int)
 
-    fun onCreateViewHolder(parent: ViewGroup): VH
+    fun onCreateViewHolder(parent: ViewGroup, itemView: Int): VH
 }
 
 typealias DataUpdate = () -> Unit
