@@ -7,5 +7,5 @@ package com.bilibili.bililive.batteria.flow.text
  * @description:
  */
 enum class DragTagState {
-    DEFAULT, UNEDITABLE, EDITABLE, DRAGGING
+    UNDEFINED, DEFAULT, UNEDITABLE, EDITABLE, DRAGGING
 }

@@ -19,7 +19,7 @@ class TextDragViewHolder(override val itemView: View, override var label: Int = 
     val content: TextView = itemView.findViewById(R.id.tv_content)
     val corner: ImageView = itemView.findViewById(R.id.iv_corner)
 
-    private var curState = DragTagState.DEFAULT
+    private var curState = DragTagState.UNDEFINED
 
     override var isEditable: Boolean = true
 
@@ -30,6 +30,7 @@ class TextDragViewHolder(override val itemView: View, override var label: Int = 
             DragTagState.UNEDITABLE -> turnToUneditable()
             DragTagState.EDITABLE -> turnToEditable()
             DragTagState.DRAGGING -> turnToDragging()
+            else -> Unit
         }
         curState = state
     }

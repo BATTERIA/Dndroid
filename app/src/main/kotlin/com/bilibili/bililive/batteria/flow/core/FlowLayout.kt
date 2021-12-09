@@ -70,7 +70,7 @@ open class FlowLayout @JvmOverloads constructor(
         val cCount = childCount
         for (i in 0 until cCount) {
             val child = getChildAt(i)
-            if (child.visibility == GONE) {
+            if (filterView(child)) {
                 if (i == cCount - 1) {
                     width = max(lineWidth, width)
                     height += lineHeight
@@ -96,6 +96,7 @@ open class FlowLayout @JvmOverloads constructor(
                 height += lineHeight
             }
         }
+
         setMeasuredDimension(
             if (modeWidth == MeasureSpec.EXACTLY) sizeWidth else width + paddingLeft + paddingRight,
             if (modeHeight == MeasureSpec.EXACTLY) sizeHeight else height + paddingTop + paddingBottom //
