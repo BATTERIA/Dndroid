@@ -14,6 +14,8 @@ import com.bilibili.bililive.batteria.flow.model.TagItem
  * @description:
  */
 class TextDragAdapter : IDragTagAdapter<TagItem<String>, TextDragViewHolder> {
+    private var isEditing = false
+
     private val dataList = mutableListOf<TagItem<String>>()
 
     private var defaultClickListener: ((TagItem<String>) -> Unit)? = null
@@ -61,7 +63,13 @@ class TextDragAdapter : IDragTagAdapter<TagItem<String>, TextDragViewHolder> {
             defaultClickListener?.invoke(data)
         }
         viewHolder.content.text = data.value
-        viewHolder.turnToDefault()
+
+        viewHolder.corner.setOnClickListener {
+            removeData(data)
+        }
+        val editableState =
+            if (viewHolder.isEditable) DragTagState.EDITABLE else DragTagState.UNEDITABLE
+        viewHolder.turnTo(if (isEditing) editableState else DragTagState.DEFAULT)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, itemView: Int): TextDragViewHolder =
@@ -77,8 +85,9 @@ class TextDragAdapter : IDragTagAdapter<TagItem<String>, TextDragViewHolder> {
         return -1
     }
 
-    override fun setEditable(editable: Boolean) {
-        dataSynchronizer?.setEditable(editable)
+    override fun setEditState(isEdit: Boolean) {
+        isEditing = isEdit
+        dataSynchronizer?.setEditState(isEdit)
     }
 
     override fun getCurrentData(): List<TagItem<String>> {

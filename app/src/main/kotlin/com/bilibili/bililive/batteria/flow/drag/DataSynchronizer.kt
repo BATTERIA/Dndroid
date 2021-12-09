@@ -9,5 +9,5 @@ package com.bilibili.bililive.batteria.flow.drag
 interface DataSynchronizer {
     fun updateData()
 
-    fun setEditable(isEditable: Boolean)
+    fun setEditState(isEdit: Boolean)
 }

@@ -24,7 +24,7 @@ interface IDragTagAdapter<T, VH: IDragTagViewHolder> {
 
     fun notifyItemMoved(from: Int, to: Int)
 
-    fun setEditable(editable: Boolean)
+    fun setEditState(isEdit: Boolean)
 
     fun getItemViewType(index: Int): Int
 

@@ -156,11 +156,11 @@ class DragFlowLayout @JvmOverloads constructor(
         }
     }
 
-    override fun setEditable(isEditable: Boolean) {
+    override fun setEditState(isEdit: Boolean) {
         viewHolders.forEach {
             val editableState =
                 if (it.isEditable) DragTagState.EDITABLE else DragTagState.UNEDITABLE
-            it.turnTo(if (isEditable) editableState else DragTagState.DEFAULT)
+            it.turnTo(if (isEdit) editableState else DragTagState.DEFAULT)
         }
     }
 

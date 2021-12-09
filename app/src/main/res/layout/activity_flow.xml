@@ -13,138 +13,24 @@
         android:text="编辑"
         android:textSize="20sp"/>
 
-    <com.bilibili.bililive.batteria.flow.drag.DragFlowLayout
-        android:id="@+id/dfl"
-        android:layout_marginTop="50dp"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <!--    <com.bilibili.bililive.batteria.flow.drag.DragFlowLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent">-->
+        <com.bilibili.bililive.batteria.flow.drag.DragFlowLayout
+            android:id="@+id/dfl"
+            android:layout_marginTop="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:padding="5dp">-->
-
-    <!--            <TextView-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:background="@drawable/text_border"-->
-    <!--                android:paddingHorizontal="20dp"-->
-    <!--                android:paddingVertical="10dp"-->
-    <!--                android:text="test"-->
-    <!--                android:textSize="20sp" />-->
-
-    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
-
-    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:padding="5dp">-->
-
-    <!--            <TextView-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:background="@drawable/text_border"-->
-    <!--                android:paddingHorizontal="20dp"-->
-    <!--                android:paddingVertical="10dp"-->
-    <!--                android:text="test"-->
-    <!--                android:textSize="20sp" />-->
-    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
-
-    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:padding="5dp">-->
-
-    <!--            <TextView-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:background="@drawable/text_border"-->
-    <!--                android:paddingHorizontal="20dp"-->
-    <!--                android:paddingVertical="10dp"-->
-    <!--                android:text="test12"-->
-    <!--                android:textSize="20sp" />-->
-    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
-
-
-    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:padding="5dp">-->
-
-    <!--            <TextView-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:background="@drawable/text_border"-->
-    <!--                android:paddingHorizontal="20dp"-->
-    <!--                android:paddingVertical="10dp"-->
-    <!--                android:text="Hello1234"-->
-    <!--                android:textSize="20sp" />-->
-    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
-
-    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:padding="5dp">-->
-
-    <!--            <TextView-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:background="@drawable/text_border"-->
-    <!--                android:paddingHorizontal="20dp"-->
-    <!--                android:paddingVertical="10dp"-->
-    <!--                android:text="test1"-->
-    <!--                android:textSize="20sp" />-->
-    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
-
-    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:padding="5dp">-->
-
-    <!--            <TextView-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:background="@drawable/text_border"-->
-    <!--                android:paddingHorizontal="20dp"-->
-    <!--                android:paddingVertical="10dp"-->
-    <!--                android:text="test"-->
-    <!--                android:textSize="20sp" />-->
-    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
-
-    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:padding="5dp">-->
-
-    <!--            <TextView-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:background="@drawable/text_border"-->
-    <!--                android:paddingHorizontal="20dp"-->
-    <!--                android:paddingVertical="10dp"-->
-    <!--                android:text="testtesttest"-->
-    <!--                android:textSize="20sp" />-->
-    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
-
-    <!--        <com.bilibili.bililive.batteria.flow.drag.DragView-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:padding="5dp">-->
-
-    <!--            <TextView-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:background="@drawable/text_border"-->
-    <!--                android:paddingHorizontal="20dp"-->
-    <!--                android:paddingVertical="10dp"-->
-    <!--                android:text="test"-->
-    <!--                android:textSize="20sp" />-->
-    <!--        </com.bilibili.bililive.batteria.flow.drag.DragView>-->
-
-    <!--    </com.bilibili.bililive.batteria.flow.drag.DragFlowLayout>-->
+        <TextView
+            android:id="@+id/add_random"
+            android:paddingTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="新增"
+            android:textSize="20sp"/>
+    </LinearLayout>
 
 </FrameLayout>
