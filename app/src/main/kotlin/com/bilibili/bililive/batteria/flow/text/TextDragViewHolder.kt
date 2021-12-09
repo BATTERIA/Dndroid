@@ -31,6 +31,7 @@ class TextDragViewHolder(override val itemView: View, override var label: Int = 
             DragTagState.EDITABLE -> turnToEditable()
             DragTagState.DRAGGING -> turnToDragging()
         }
+        curState = state
     }
 
     fun turnToDefault() {

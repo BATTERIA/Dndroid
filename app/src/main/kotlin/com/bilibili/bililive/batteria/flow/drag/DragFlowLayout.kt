@@ -109,10 +109,12 @@ class DragFlowLayout @JvmOverloads constructor(
 
     fun <VH : IDragTagViewHolder> setLayoutAdapter(adapter: IDragTagAdapter<*, VH>): DragFlowLayout {
         dragTagAdapter = adapter
+        adapter.setDataSynchronizer(this)
 
         repeat(adapter.getItemCount()) {
             createViewLast(adapter, it)
         }
+
         return this
     }
 
@@ -218,7 +220,7 @@ class DragFlowLayout @JvmOverloads constructor(
         val cCount = childCount
         for (i in 0 until cCount) {
             val child = getChildAt(i)
-            if (child === stubView || filterView(child)) continue
+            if (child === stubView || filterView(child) || (child is DragView && child.filterTouch)) continue
 
             // stub需要移动的目标位置
             var target = i
@@ -261,7 +263,7 @@ class DragFlowLayout @JvmOverloads constructor(
      * 过滤不可见和拖拽视图
      */
     override fun filterView(view: View): Boolean = view.visibility == View.GONE
-        || (view is DragView && view.isDragging) || !view.isEnabled
+        || (view is DragView && view.isDragging)
 
     /**
      * 自定义配置绘制顺序

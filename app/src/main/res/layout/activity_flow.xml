@@ -6,11 +6,18 @@
     android:padding="20dp"
     tools:context=".flow.FlowActivity">
 
+    <TextView
+        android:id="@+id/tv_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="编辑"
+        android:textSize="20sp"/>
+
     <com.bilibili.bililive.batteria.flow.drag.DragFlowLayout
         android:id="@+id/dfl"
         android:layout_marginTop="50dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
     <!--    <com.bilibili.bililive.batteria.flow.drag.DragFlowLayout-->
     <!--        android:layout_width="match_parent"-->

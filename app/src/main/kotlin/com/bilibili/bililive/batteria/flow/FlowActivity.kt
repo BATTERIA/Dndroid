@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
+import android.widget.TextView
 import com.bilibili.bililive.batteria.R
 import com.bilibili.bililive.batteria.flow.drag.DragFlowLayout
 import com.bilibili.bililive.batteria.flow.model.TagItem
@@ -42,5 +43,13 @@ class FlowActivity : AppCompatActivity() {
         adapter.initData(t)
         dfl.setLayoutAdapter(adapter)
 
+
+        var isEdit = false
+        val switch = findViewById<TextView>(R.id.tv_switch)
+        switch.setOnClickListener {
+            switch.text = if (isEdit) "保存" else "编辑"
+            adapter.setEditable(isEdit)
+            isEdit = !isEdit
+        }
     }
 }

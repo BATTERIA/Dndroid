@@ -17,4 +17,5 @@
     <color name="live_area_edit_text_drag">#FF6699</color>
     <color name="live_area_edit_border">#E3E5E7</color>
     <color name="live_area_edit_background_uneditable">#F1F2F3</color>
+    <color name="live_area_edit_background_default">#FFFFFF</color>
     </resources>
