@@ -78,7 +78,7 @@ open class FlowLayout @JvmOverloads constructor(
                 continue
             }
 
-            if (filterView(child)) continue
+//            if (filterView(child)) continue
 
             measureChild(child, widthMeasureSpec, heightMeasureSpec)
             val lp = child.layoutParams as MarginLayoutParams

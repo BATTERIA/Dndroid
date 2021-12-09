@@ -19,24 +19,24 @@ class FlowActivity : AppCompatActivity() {
         setContentView(R.layout.activity_flow)
 
         val list = listOf(
-            "testtest",
-            "test",
-            "testtest",
-            "test",
-            "testtesttesttest",
-            "testtesttest",
-            "test",
-            "test",
-            "testtest",
-            "test",
-            "testtesttest",
-            "test",
-            "testtest",
-            "testtesttesttest",
-            "test",
-            "testtest"
+            "1testtest",
+            "2test",
+            "3testtest",
+            "4test",
+            "5testtesttesttest",
+            "6testtesttest",
+            "7test",
+            "8test",
+            "9testtest",
+            "10test",
+            "11testtesttest",
+            "12test",
+            "13testtest",
+            "14testtesttesttest",
+            "15test",
+            "16testtest"
         )
-        val t = mutableListOf(TagItem("test", false))
+        val t = mutableListOf(TagItem("0test", false))
         t.addAll(list.map { TagItem(it) })
         val dfl = findViewById<DragFlowLayout>(R.id.dfl)
         val adapter = TextDragAdapter()
@@ -47,9 +47,12 @@ class FlowActivity : AppCompatActivity() {
         var isEdit = false
         val switch = findViewById<TextView>(R.id.tv_switch)
         switch.setOnClickListener {
-            switch.text = if (isEdit) "保存" else "编辑"
-            adapter.setEditable(isEdit)
+            switch.text = if (isEdit) {
+                println("DTEST: ${adapter.getData()}")
+                "编辑"
+            } else "保存"
             isEdit = !isEdit
+            adapter.setEditable(isEdit)
         }
     }
 }

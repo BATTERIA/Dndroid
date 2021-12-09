@@ -1,7 +1,6 @@
 package com.bilibili.bililive.batteria.flow.drag
 
 import android.view.ViewGroup
-import com.bilibili.bililive.batteria.flow.text.DragTagState
 
 /**
  * @author: yaobeihaoyu
@@ -18,6 +17,8 @@ interface IDragTagAdapter<T, VH: IDragTagViewHolder> {
     fun removeData(data: T)
 
     fun addData(data: T)
+
+    fun getCurrentData(): List<T>
 
     fun getItemLabel(index: Int): Int
 

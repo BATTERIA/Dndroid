@@ -50,6 +50,8 @@ class DragFlowLayout @JvmOverloads constructor(
      */
     private var draggingView: View? = null
 
+    private var draggingViewIndex: Int = -1
+
     // 动态调整布局动画
     private var moveAnim: Animator? = null
 
@@ -156,7 +158,8 @@ class DragFlowLayout @JvmOverloads constructor(
 
     override fun setEditable(isEditable: Boolean) {
         viewHolders.forEach {
-            val editableState = if (it.isEditable) DragTagState.EDITABLE else DragTagState.UNEDITABLE
+            val editableState =
+                if (it.isEditable) DragTagState.EDITABLE else DragTagState.UNEDITABLE
             it.turnTo(if (isEditable) editableState else DragTagState.DEFAULT)
         }
     }
@@ -177,6 +180,9 @@ class DragFlowLayout @JvmOverloads constructor(
      * 拖拽视图移动至占位视图处，并移除占位视图
      */
     override fun replaceStub(view: View, onFinish: () -> Unit) {
+        // 切换为普通编辑状态
+        viewHolders[draggingViewIndex].turnTo(DragTagState.EDITABLE)
+
         val loc = stubGoalLoc ?: stubView?.run { Location(left, top, right, bottom) } ?: return
 
         animateToStub(view, loc) {
@@ -184,19 +190,20 @@ class DragFlowLayout @JvmOverloads constructor(
             removeView(view)
             addView(view, stubIndex)
             removeStub()
+            draggingViewIndex - 1
         }
     }
 
     override fun setDraggingView(view: View) {
         draggingView = view
         stubGoalLoc = Location(view.left, view.top, view.right, view.bottom)
-        // todo
-//        viewHolders.
-//        dragTagAdapter?.notifyItemDragStart(indexOfChild(view))
+        val index = indexOfChild(view)
+        draggingViewIndex = if (-1 != stubIndex && stubIndex < index) index - 1 else index
+
+        if (draggingViewIndex >= 0) viewHolders[draggingViewIndex].turnTo(DragTagState.DRAGGING)
     }
 
     override fun removeDraggingView() {
-//        dragTagAdapter?.notifyItemDragFinish(indexOfChild(draggingView))
         draggingView = null
     }
 
@@ -239,9 +246,8 @@ class DragFlowLayout @JvmOverloads constructor(
 
             // 通知adapter数据更新
             val dragIndex = indexOfChild(draggingView)
-            val from = if (dragIndex <= stubIndex) stubIndex - 1 else stubIndex
             val to = if (dragIndex <= target) target - 1 else target
-            itemMoved(from, to)
+            itemMoved(draggingViewIndex, to)
 
             // 调整stub在children中的位置
             moveStubOrder(target, view)
@@ -382,11 +388,16 @@ class DragFlowLayout @JvmOverloads constructor(
         lAnim.start()
     }
 
+    /**
+     * 拖拽过程中就通知调整 Holder和Adapter 中视图的位置
+     */
     private fun itemMoved(from: Int, to: Int) {
+        if (from == to) return
         dragTagAdapter?.notifyItemMoved(from, to)
         if (from == to || from !in 0 until viewHolders.size || to !in 0 until viewHolders.size) return
         val t = viewHolders.removeAt(from)
-        viewHolders.add(if (from < to) to - 1 else to, t)
+        viewHolders.add(to, t)
+        draggingViewIndex = to
     }
 
     private fun removeStub() {

@@ -70,7 +70,7 @@ class TextDragAdapter : IDragTagAdapter<TagItem<String>, TextDragViewHolder> {
     override fun notifyItemMoved(from: Int, to: Int) {
         if (from == to || from !in 0 until dataList.size || to !in 0 until dataList.size) return
         val t = dataList.removeAt(from)
-        dataList.add(if (from < to) to - 1 else to, t)
+        dataList.add(to, t)
     }
 
     override fun getItemViewType(index: Int): Int {
@@ -79,5 +79,9 @@ class TextDragAdapter : IDragTagAdapter<TagItem<String>, TextDragViewHolder> {
 
     override fun setEditable(editable: Boolean) {
         dataSynchronizer?.setEditable(editable)
+    }
+
+    override fun getCurrentData(): List<TagItem<String>> {
+        return dataList
     }
 }
