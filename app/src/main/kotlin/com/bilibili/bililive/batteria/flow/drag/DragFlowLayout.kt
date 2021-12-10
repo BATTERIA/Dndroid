@@ -227,7 +227,7 @@ class DragFlowLayout @JvmOverloads constructor(
         val cCount = childCount
         for (i in 0 until cCount) {
             val child = getChildAt(i)
-            if (child === stubView || filterView(child) || (child is DragView && child.filterTouch)) continue
+            if (child === stubView || filterView(child) || (child is DragView && child.filterLongPress)) continue
 
             // stub需要移动的目标位置
             var target = i

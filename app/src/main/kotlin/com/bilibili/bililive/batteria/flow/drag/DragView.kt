@@ -28,7 +28,7 @@ class DragView @JvmOverloads constructor(
     // 是否处于拖拽中
     var isDragging = false
 
-    var filterTouch = false
+    var filterLongPress = false
 
     private var internalDragLayoutController: InternalDragController? = null
     private val dragLayoutController: InternalDragController?
@@ -67,13 +67,13 @@ class DragView @JvmOverloads constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (filterTouch) return true
-
         val rawX = event.rawX.toInt()
         val rawY = event.rawY.toInt()
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 isDragging = false
+                if (filterLongPress) return true
+
                 dragLayoutController?.removeDraggingView()
 
                 cancelLongPressJob()
@@ -88,7 +88,7 @@ class DragView @JvmOverloads constructor(
                 beginY = lastY
             }
             MotionEvent.ACTION_MOVE -> {
-                if (!isDragging) return false
+                if (!isDragging || filterLongPress) return true
 
                 dragLayoutController?.detectViewCollision(this, rawX, rawY)
 
@@ -107,9 +107,9 @@ class DragView @JvmOverloads constructor(
             MotionEvent.ACTION_UP -> {
                 cancelLongPressJob()
 
-                if (!isDragging) {
+                if (!isDragging || filterLongPress) {
                     performClick()
-                    return false
+                    return true
                 }
 
                 // 落地

@@ -63,6 +63,6 @@ class TextDragViewHolder(override val itemView: View, override var label: Int = 
 
     private fun setViewClickable(clickable: Boolean) {
         if (itemView !is DragView) return
-        itemView.filterTouch = !clickable
+        itemView.filterLongPress = !clickable
     }
 }

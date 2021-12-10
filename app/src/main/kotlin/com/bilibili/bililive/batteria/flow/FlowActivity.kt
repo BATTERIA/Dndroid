@@ -40,6 +40,9 @@ class FlowActivity : AppCompatActivity() {
         val dfl = findViewById<DragFlowLayout>(R.id.dfl)
         val adapter = TextDragAdapter()
         adapter.initData(t)
+        adapter.setItemClickListener {
+            println("DTEST: ${it.value}")
+        }
         dfl.setLayoutAdapter(adapter)
 
         var isEdit = false

@@ -18,14 +18,14 @@ class TextDragAdapter : IDragTagAdapter<TagItem<String>, TextDragViewHolder> {
 
     private val dataList = mutableListOf<TagItem<String>>()
 
-    private var defaultClickListener: ((TagItem<String>) -> Unit)? = null
+    private var innerItemClickListener: ((TagItem<String>) -> Unit)? = null
 
     private var dataSynchronizer: DataSynchronizer? = null
 
     fun getData(): List<TagItem<String>> = dataList
 
-    fun setDefaultClickListener(clickListener: (TagItem<String>) -> Unit) {
-        defaultClickListener = clickListener
+    fun setItemClickListener(clickListener: (TagItem<String>) -> Unit) {
+        innerItemClickListener = clickListener
     }
 
     override fun setDataSynchronizer(synchronizer: DataSynchronizer) {
@@ -60,7 +60,7 @@ class TextDragAdapter : IDragTagAdapter<TagItem<String>, TextDragViewHolder> {
         viewHolder.isEditable = data.isEditable
         viewHolder.label = getItemLabel(position)
         viewHolder.itemView.setOnClickListener {
-            defaultClickListener?.invoke(data)
+            innerItemClickListener?.invoke(data)
         }
         viewHolder.content.text = data.value
 
