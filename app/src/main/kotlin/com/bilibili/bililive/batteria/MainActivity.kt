@@ -22,9 +22,15 @@ import com.bilibili.bililive.batteria.webview.WebViewActivity
 import com.bilibili.bililive.batteria.wordmerge.WordMergeActivity
 import com.bilibili.bililive.infra.util.cache.api.CacheActivity
 import kotlinx.coroutines.*
+import java.lang.NullPointerException
+import kotlin.concurrent.thread
+import kotlin.coroutines.resumeWithException
 
 @Keep
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),
+    CoroutineScope by CoroutineScope(SupervisorJob() + Dispatchers.Main + CoroutineExceptionHandler { context, t ->
+        println("test-D outter error")
+    }) {
 
     var viewModel: MainViewModel? = null
 
@@ -35,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.layoutManager = GridLayoutManager(this, 3)
         val adapter = ItemAdapter()
+        var t = true
         adapter.setItems(listOf(Item("WebView", R.drawable.web) {
             startActivity(Intent(this, WebViewActivity::class.java))
         }, Item("ImageLoader", R.drawable.image) {
@@ -64,14 +71,46 @@ class MainActivity : AppCompatActivity() {
         }, Item("AnimationTest", R.drawable.animation) {
             startActivity(Intent(this, AnimationTestActivity::class.java))
         }, Item("Touch", R.drawable.ic_more_cache) {
-            val clazz = Class.forName("com.bilibili.bililive.mylibrary.TestClass")
-            val constructor = clazz.getDeclaredConstructor(String::class.java)
+//            val clazz = Class.forName("com.bilibili.bililive.mylibrary.TestClass")
+//            val constructor = clazz.getDeclaredConstructor(String::class.java)
 //            constructor.isAccessible = true
-            constructor.newInstance("DTEST sb")
+//            constructor.newInstance("DTEST sb")
+            launch(CoroutineExceptionHandler { context, t ->
+                println("test-D inner error")
+            }) {
+                try {
+                    val a = async {
+                        println("a")
+                        "aa"
+                    }
+                    val b = async {
+                        println("b")
+
+                        suspendCancellableCoroutine<String> { continuation ->
+                            thread {
+                                if (t) {
+                                    t = false
+                                    continuation.resumeWithException(NullPointerException("test error"))
+                                } else {
+                                    t = true
+                                    continuation.resumeWith(Result.success("bb"))
+                                }
+                            }
+                        }
+                        "bb"
+                    }
+                    val aa = a.await()
+                    val bb = b.await()
+                    println("test-D after $aa, $bb")
+                } catch (e: Exception) {
+                    withContext(Dispatchers.IO) {
+                        println("test")
+                    }
+                }
+            }
         }))
         recyclerView.adapter = adapter
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
     }
 }
-

@@ -60,7 +60,11 @@ class TextDragAdapter : IDragTagAdapter<TagItem<String>, TextDragViewHolder> {
         viewHolder.isEditable = data.isEditable
         viewHolder.label = getItemLabel(position)
         viewHolder.itemView.setOnClickListener {
-            innerItemClickListener?.invoke(data)
+            if (isEditing) {
+                if (viewHolder.isEditable) removeData(data)
+            } else {
+                innerItemClickListener?.invoke(data)
+            }
         }
         viewHolder.content.text = data.value
 

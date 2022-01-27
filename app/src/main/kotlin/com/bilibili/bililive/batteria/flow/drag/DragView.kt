@@ -73,6 +73,7 @@ class DragView @JvmOverloads constructor(
             MotionEvent.ACTION_DOWN -> {
                 isDragging = false
                 if (filterLongPress) return true
+                parent.requestDisallowInterceptTouchEvent(true)
 
                 dragLayoutController?.removeDraggingView()
 
@@ -111,6 +112,7 @@ class DragView @JvmOverloads constructor(
                     performClick()
                     return true
                 }
+                parent.requestDisallowInterceptTouchEvent(false)
 
                 // 落地
                 dragLayoutController?.replaceStub(this) {
@@ -121,7 +123,7 @@ class DragView @JvmOverloads constructor(
                 return true
             }
         }
-        return super.onTouchEvent(event)
+        return true
     }
 
     override fun onAttachedToWindow() {

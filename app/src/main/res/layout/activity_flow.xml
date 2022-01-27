@@ -1,36 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
     tools:context=".flow.FlowActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:theme="@style/Base.Theme.AppCompat.Light"
+        app:logo="@mipmap/ic_launcher"
+        app:subtitle="副标题"
+        app:subtitleTextColor="#fff"
+        app:title="标题"
+        app:titleTextColor="#fff" />
+
     <TextView
         android:id="@+id/tv_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="编辑"
-        android:textSize="20sp"/>
+        android:textSize="20sp" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginTop="50dp">
 
-        <com.bilibili.bililive.batteria.flow.drag.DragFlowLayout
-            android:id="@+id/dfl"
-            android:layout_marginTop="50dp"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/add_random"
-            android:paddingTop="20dp"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="新增"
-            android:textSize="20sp"/>
-    </LinearLayout>
+            android:orientation="vertical">
+
+            <com.bilibili.bililive.batteria.flow.drag.DragFlowLayout
+                android:id="@+id/dfl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp" />
+
+            <TextView
+                android:id="@+id/add_random"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:text="新增"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1000dp"
+                android:src="@color/black" />
+        </LinearLayout>
+    </ScrollView>
+
 
 </FrameLayout>
