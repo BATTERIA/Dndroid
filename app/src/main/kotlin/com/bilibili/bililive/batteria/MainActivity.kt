@@ -16,6 +16,7 @@ import com.bilibili.bililive.batteria.danmaku.DanmakuActivity
 import com.bilibili.bililive.batteria.flow.FlowActivity
 import com.bilibili.bililive.batteria.gesture.GestureActivity
 import com.bilibili.bililive.batteria.imageloader.ImageLoaderActivity
+import com.bilibili.bililive.batteria.microsoft.ViewPagerActivity
 import com.bilibili.bililive.batteria.opengl.OpenglActivity
 import com.bilibili.bililive.batteria.recycler.RecyclerActivity
 import com.bilibili.bililive.batteria.webview.WebViewActivity
@@ -70,6 +71,10 @@ class MainActivity : AppCompatActivity(),
             startActivity(Intent(this, FlowActivity::class.java))
         }, Item("AnimationTest", R.drawable.animation) {
             startActivity(Intent(this, AnimationTestActivity::class.java))
+        }, Item("TabLayout", R.drawable.animation) {
+            startActivity(Intent(this, AnimationTestActivity::class.java))
+        }, Item("ViewPager", R.drawable.animation) {
+            startActivity(Intent(this, ViewPagerActivity::class.java))
         }, Item("Touch", R.drawable.ic_more_cache) {
 //            val clazz = Class.forName("com.bilibili.bililive.mylibrary.TestClass")
 //            val constructor = clazz.getDeclaredConstructor(String::class.java)

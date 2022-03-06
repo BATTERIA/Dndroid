@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".animation.AnimationTestActivity"></activity>
+        <activity android:name=".microsoft.ViewPagerActivity"></activity>
+        <activity android:name=".animation.AnimationTestActivity" />
         <activity
             android:name=".flow.FlowActivity"
             android:configChanges="orientation|keyboardHidden"
